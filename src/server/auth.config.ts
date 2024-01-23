@@ -1,4 +1,3 @@
-
 import type { NextAuthConfig } from "next-auth"; // Importing NextAuthConfig type
 import Credentials from "next-auth/providers/credentials"; // Importing Credentials provider for NextAuth
 import Github from "next-auth/providers/github"; // Importing Github provider for NextAuth
@@ -44,5 +43,7 @@ const nextAuthConfig: NextAuthConfig = {
     })
   ],
 };
+
+
 
 export default nextAuthConfig; // Exporting the NextAuth configuration object

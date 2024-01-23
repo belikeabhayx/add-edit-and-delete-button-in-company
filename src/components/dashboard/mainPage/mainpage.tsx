@@ -1,92 +1,127 @@
-import CreateNoteDialog from "@/components/CreateNoteDialog";
+"use client";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { auth } from "@/server/auth";
-import { db } from "@/server/db";
-import { $notes } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
-import { ArrowLeft } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
-import UserButton from "../navbar/userbutton";
+import React, { useState } from "react";
 
-type Props = {};
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useRouter } from "next/navigation";
+import { api } from "@/trpc/react";
 
-const DashboardPage = async (props: Props) => {
-  const session = await auth();
+const MainPage = () => {
+  const [squares, setSquares] = useState<
+    { id: number; clicked: boolean; name?: string }[]
+  >([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const router = useRouter();
+  const [inputName, setInputName] = useState("");
 
-  if(!session) return <div>Not Loged in</div>
+  // create command
+  const createCompany = api.company.create.useMutation({
+    onSuccess: (data) => {
+      console.log("Mutation succeeded:", data);
+      router.refresh();
+      setInputName("");
+    },
+  });
 
-  console.log(session)
+  const handleButtonClick = () => {
+    setIsModalOpen(true);
+  };
 
-  const notes = await db
-    .select()
-    .from($notes)
-    .where(eq($notes.userId, session.user!.id));
+  const handleSaveClick = () => {
+    setIsModalOpen(false);
+    const newId =
+      squares.length > 0 && squares[squares.length - 1] !== undefined
+        ? squares[squares.length - 1].id + 1
+        : 1;
+    setSquares([...squares, { id: newId, clicked: false, name: inputName }]);
+    setInputName("");
+
+    createCompany.mutate({ name: inputName });
+  };
+
+  const handleSquareClick = (id: number) => {
+    setSquares(
+      squares.map((square) =>
+        square.id === id ? { ...square, clicked: true } : square,
+      ),
+    );
+  };
 
   return (
-    <>
-      <div className="grainy min-h-screen">
-        <div className="max-w-7xl mx-auto p-10">
-          <div className="h-14"></div>
-          <div className="flex justify-between items-center md:flex-row flex-col">
-            <div className="flex items-center">
-              <Link href="/">
-                <Button className="bg-green-600" size="sm">
-                  <ArrowLeft className="mr-1 w-4 h-4" />
-                  Back
-                </Button>
-              </Link>
-              <div className="w-4"></div>
-              <h1 className="text-3xl font-bold text-gray-900">My Notes</h1>
-              <div className="w-4"></div>
-              <UserButton />
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        createCompany.mutate({ name: inputName });
+      }}
+    >
+      <Dialog>
+        <div className="mt-20 flex items-center justify-center">
+          <DialogTrigger asChild>
+            <Button onClick={handleButtonClick} className="border">
+              Create Company
+            </Button>
+          </DialogTrigger>
+          {squares.map((square, index) => (
+            <div
+              key={index}
+              onClick={() => handleSquareClick(square.id)}
+              className={`h-24 w-48 ${square.clicked ? "bg-red-500" : "bg-blue-500"}`}
+            >
+              {square.name}
             </div>
-          </div>
-
-          <div className="h-8"></div>
-          <Separator />
-          <div className="h-8"></div>
-          {/* list all the notes */}
-          {/* if no notes, display this */}
-          {notes.length === 0 && (
-            <div className="text-center">
-              <h2 className="text-xl text-gray-500">You have no notes yet.</h2>
+          ))}
+          {isModalOpen && (
+            <div className="modal">
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Create profile</DialogTitle>
+                  <DialogDescription>
+                    Save changes to your profile here. Click save when you're
+                    done.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="username" className="text-right">
+                      Company Name
+                    </Label>
+                    <Input
+                      id="username"
+                      defaultValue="@peduarte"
+                      className="col-span-3"
+                      value={inputName}
+                      onChange={(e) => setInputName(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button
+                    type="submit"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleSaveClick();
+                    }}
+                  >
+                    Save changes
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
             </div>
           )}
-
-          {/* display all the notes */}
-          <div className="grid sm:grid-cols-3 md:grid-cols-5 grid-cols-1 gap-3">
-            <CreateNoteDialog />
-            {notes.map((note) => {
-              return (
-                <a href={`/notebook/${note.id}`} key={note.id}>
-                  <div className="border border-stone-300 rounded-lg overflow-hidden flex flex-col hover:shadow-xl transition hover:-translate-y-1">
-                    <Image
-                      width={400}
-                      height={200}
-                      alt={note.name}
-                      src={note.imageUrl || ""}
-                    />
-                    <div className="p-4">
-                      <h3 className="text-xl font-semibold text-gray-900">
-                        {note.name}
-                      </h3>
-                      <div className="h-1"></div>
-                      <p className="text-sm text-gray-500">
-                        {new Date(note.createdAt).toLocaleDateString()}
-                      </p>
-                    </div>
-                  </div>
-                </a>
-              );
-            })}
-          </div>
         </div>
-      </div>
-    </>
+      </Dialog>
+    </form>
   );
 };
 
-export default DashboardPage;
+export default MainPage;

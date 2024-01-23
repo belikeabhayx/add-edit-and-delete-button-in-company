@@ -1,10 +1,9 @@
 import NextAuth from "next-auth"; // Importing NextAuth library
- // Importing authentication configuration
 import { DrizzleAdapter } from "@auth/drizzle-adapter"; // Importing function to get a user by ID
 import authConfig from "./auth.config";
 import { db } from "./db";
 
-// Destructuring NextAuth functionalities: handlers, auth, signIn, signOut
+
 export const {
   handlers: { GET, POST },
   auth,
@@ -42,5 +41,6 @@ export const {
   session: { strategy: "jwt" }, // Configuring session strategy as "jwt"
   ...authConfig, // Spreading additional authentication configurations
 });
+
 
 // Exporting the destructured NextAuth functionalities

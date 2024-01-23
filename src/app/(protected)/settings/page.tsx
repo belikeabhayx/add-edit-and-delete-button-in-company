@@ -8,19 +8,7 @@ const SettingsPage = async () => {
   const session = await auth();
   return (
     <div>
-      <Header />
-      {JSON.stringify(session)}
-      <form
-        action={async () => {
-          "use server";
-
-          await signOut();
-        }}
-      >
-        <Button type="submit" className="flex items-center justify-center">
-          signOut
-        </Button>
-      </form>
+      <Header/>
       <DashboardPage />
     </div>
   );
