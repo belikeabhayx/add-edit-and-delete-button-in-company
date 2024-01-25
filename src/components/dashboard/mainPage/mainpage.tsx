@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { api } from "@/trpc/react";
+import Link from "next/link";
 
 const MainPage = () => {
   const [squares, setSquares] = useState<
@@ -41,7 +42,8 @@ const MainPage = () => {
     setIsModalOpen(false);
     const newId =
       squares.length > 0 && squares[squares.length - 1] !== undefined
-        ? squares[squares.length - 1].id + 1
+        ? // @ts-ignore
+          squares[squares.length - 1].id + 1
         : 1;
     setSquares([...squares, { id: newId, clicked: false, name: inputName }]);
     setInputName("");
@@ -49,19 +51,13 @@ const MainPage = () => {
     createCompany.mutate({ name: inputName });
   };
 
-  const handleSquareClick = (id: number) => {
-    setSquares(
-      squares.map((square) =>
-        square.id === id ? { ...square, clicked: true } : square,
-      ),
-    );
-  };
+  const { data, isLoading } = api.company.read.useQuery();
 
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        createCompany.mutate({ name: inputName });
+        // createCompany.mutate({ name: inputName });
       }}
     >
       <Dialog>
@@ -71,15 +67,17 @@ const MainPage = () => {
               Create Company
             </Button>
           </DialogTrigger>
-          {squares.map((square, index) => (
-            <div
-              key={index}
-              onClick={() => handleSquareClick(square.id)}
-              className={`h-24 w-48 ${square.clicked ? "bg-red-500" : "bg-blue-500"}`}
-            >
-              {square.name}
-            </div>
-          ))}
+          <div className="grid grid-cols-4">
+          {data &&
+            data.map((square, index) => (
+              <div
+                key={index}
+                className={`m-auto flex h-24 w-48 items-center justify-center border-8 border-black`}
+              >
+                <Link href={`/company/${square.id}`}>{square.name}</Link>
+              </div>
+            ))}
+          </div>
           {isModalOpen && (
             <div className="modal">
               <DialogContent className="sm:max-w-[425px]">
