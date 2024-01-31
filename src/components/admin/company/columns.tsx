@@ -1,20 +1,20 @@
-"use client";
-
+"use client"
 import { type ColumnDef } from "@tanstack/react-table";
-import { Loader2, Pencil, Trash2 } from "lucide-react";
+import { Badge, Loader2, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
+import * as z from "zod";
+import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { selectProductSchema } from "@/server/db/schema";
-import { z } from "zod";
-import { Badge } from "@/components/ui/badge";
-import { ColumnHeader } from "@/components/ui/data-table";
-import ProductForm from "./product-form";
-import { api } from "@/trpc/react";
 import { toast } from "sonner";
-import { format } from "date-fns";
+import { api } from "@/trpc/react";
+import { selectProductSchema } from "@/server/db/schema";
+import { ColumnHeader } from "@/components/ui/data-table/data-table-column-header";
+import ProductForm from "./product-form";
 
-export type Product = z.infer<typeof selectProductSchema>;
+export type Product = z.infer<typeof selectProductSchema> & {
+  tax: number;
+  total: number;
+};
 
 export const columns: ColumnDef<Product>[] = [
   {
@@ -70,7 +70,7 @@ export const columns: ColumnDef<Product>[] = [
           );
         case "hold":
           return (
-            <Badge className="rounded-sm" variant="secondary">
+            <Badge className="rounded-sm">
               {status}
             </Badge>
           );
@@ -95,9 +95,14 @@ export const columns: ColumnDef<Product>[] = [
     },
   },
   {
-    accessorKey: "createdAt",
-    header: ({ column }) => <ColumnHeader column={column} title="Created" />,
-    cell: ({ getValue }) => format(getValue<Product["createdAt"]>(), "PPp"),
+    accessorKey: "tax",
+    header: "Tax (%)",
+    cell: ({ getValue }) => (getValue<Product["tax"]>()),
+  },
+  {
+    accessorKey: "total",
+    header: "Total",
+    cell: ({ getValue }) => (getValue<Product["total"]>()),
   },
   {
     id: "actions",
@@ -149,3 +154,5 @@ export const columns: ColumnDef<Product>[] = [
     },
   },
 ];
+
+// ...ProductForm component

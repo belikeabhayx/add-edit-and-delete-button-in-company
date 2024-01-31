@@ -1,13 +1,13 @@
 import { columns } from "@/components/admin/company/columns";
-import ProductsTable from "@/components/admin/company/products-table";
-import ProductsTableToolbar from "@/components/admin/company/products-table-toolbar";
 import { Button } from "@/components/ui/button";
 import { auth } from "@/server/auth";
-import { company } from "@/server/db/schema";
-import { api } from "@/trpc/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import React, { useState } from "react";
+import NoSSR from "@/components/no-ssr";
+import ProductsTable from "@/components/admin/company/products-table";
+import { api } from "@/trpc/server";
+
 
 type Props = {
   params: {
@@ -20,10 +20,11 @@ const NotebookPage = async ({ params: { compId } }: Props) => {
   if (!session?.user) {
     return redirect("/dashboard");
   }
+  const products = await api.product.read.query();
 
   return (
     <div className="grainy min-h-screen p-8">
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-7xl">
         <div className="flex items-center rounded-lg border border-stone-200 p-4 shadow-xl">
           <Link href="/dashboard">
             <Button className="bg-green-600" size="sm">
@@ -39,6 +40,9 @@ const NotebookPage = async ({ params: { compId } }: Props) => {
 
         <div className="h-4"></div>
         <div className="w-full rounded-lg border border-stone-200 px-16 py-8 shadow-xl">
+        <NoSSR>
+        <ProductsTable columns={columns} initialData={products} />
+        </NoSSR>
         </div>
       </div>
     </div>

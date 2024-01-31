@@ -13,7 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { FacetedFilter } from "@/components/ui/data-table";
+import { FacetedFilter } from "@/components/ui/data-table/data-table-faceted-filter";
 import ProductForm from "./product-form";
 
 type ToolbarProps<TData> = {

@@ -16,11 +16,10 @@ import {
 } from "@tanstack/react-table";
 
 import { Product } from "./columns";
-
+import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
+import { DataTable } from "@/components/ui/data-table/data-table";
 import ProductsTableToolbar from "./products-table-toolbar";
 import { api } from "@/trpc/react";
-import { DataTable } from "@/components/ui/data-table/data-table";
-import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
 
 type ProductsTableProps = {
   columns: ColumnDef<Product>[];
@@ -28,7 +27,7 @@ type ProductsTableProps = {
 };
 
 const ProductsTable = ({ columns, initialData }: ProductsTableProps) => {
-  // const { data } = api.product.read.useQuery(undefined, { initialData });
+  const { data } = api.product.read.useQuery(undefined, { initialData });
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});

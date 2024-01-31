@@ -11,7 +11,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Form,
   FormControl,
@@ -63,6 +63,16 @@ const ProductForm = ({ btn, formBtnTitle, values }: Props) => {
     },
   });
 
+  // Calculate total price based on price and tax rate
+  useEffect(() => {
+    if (form.watch("price") && form.watch("tax")) {
+      const taxRate = form.watch("tax");
+      const price = form.watch("price");
+      const total = price * (1 + taxRate / 100);
+      form.setValue("total", total);
+    }
+  }, [form.watch("price"), form.watch("tax")]);
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>{btn}</SheetTrigger>
@@ -70,9 +80,11 @@ const ProductForm = ({ btn, formBtnTitle, values }: Props) => {
         <SheetHeader>
           <SheetTitle>Product</SheetTitle>
         </SheetHeader>
-        <div className="flex-1">
+        <div className="flex-1 overflow-auto">
           <Form {...form}>
             <form className="grid grid-cols-4 gap-4">
+
+              {/* title */}
               <FormField
                 control={form.control}
                 name="title"
@@ -86,6 +98,8 @@ const ProductForm = ({ btn, formBtnTitle, values }: Props) => {
                   </FormItem>
                 )}
               />
+
+              {/* description */}
               <FormField
                 control={form.control}
                 name="description"
@@ -102,6 +116,8 @@ const ProductForm = ({ btn, formBtnTitle, values }: Props) => {
                   </FormItem>
                 )}
               />
+
+              {/* image */}
               <FormField
                 control={form.control}
                 name="image"
@@ -142,6 +158,8 @@ const ProductForm = ({ btn, formBtnTitle, values }: Props) => {
                   </FormItem>
                 )}
               />
+
+              {/* price */}
               <FormField
                 control={form.control}
                 name="price"
@@ -149,12 +167,44 @@ const ProductForm = ({ btn, formBtnTitle, values }: Props) => {
                   <FormItem className="col-span-2">
                     <FormLabel>Price</FormLabel>
                     <FormControl>
-                      <Input type="number" {...field} min={0}/>
+                      <Input type="number" {...field} min={0} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
+              {/* tax rate */}
+              <FormField
+                control={form.control}
+                name="tax"
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormLabel>Tax Rate (%)</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} min={0} max={100} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* total price */}
+              <FormField
+                control={form.control}
+                name="total"
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormLabel>Total Price</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} readOnly />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* status */}
               <FormField
                 control={form.control}
                 name="status"

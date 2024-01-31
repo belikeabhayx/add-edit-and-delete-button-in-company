@@ -6,6 +6,7 @@ import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import { FaGithub } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
+import { Social } from "./auth/social";
 
 const page = () => {
   useEffect(() => {
@@ -84,7 +85,7 @@ const page = () => {
                   </form>
 
                   <form action="#" className="sign-up-form">
-                    <LoginForm/>
+                    {/* <LoginForm/> */} <Social/>
                   </form>
 
 

@@ -3,11 +3,9 @@
 import { signIn } from "next-auth/react"; // Importing signIn function from next-auth for authentication
 import { FcGoogle } from "react-icons/fc"; // Google icon component
 import { FaGithub } from "react-icons/fa"; // GitHub icon component
-import { useSearchParams } from "next/navigation"; // Hook for accessing URL search parameters
 
 import { Button } from "@/components/ui/button"; // Button component
 import { DEFAULT_LOGIN_REDIRECT } from "routes";
-
 
 export const Social = () => {
   // Function triggered when Google or GitHub buttons are clicked
@@ -15,11 +13,11 @@ export const Social = () => {
     signIn(provider, {
       callbackUrl: DEFAULT_LOGIN_REDIRECT, // Redirect URL after authentication
     });
-  }
+  };
 
   return (
     // Rendering Google and GitHub buttons for social login
-    <div className="flex items-center w-full gap-x-2">
+    <div className="flex w-full items-center gap-x-2">
       {/* Google login button */}
       <Button
         size="lg"

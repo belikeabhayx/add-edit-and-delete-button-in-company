@@ -7,9 +7,13 @@ import {
   serial,
   index,
   varchar,
+  doublePrecision,
+  pgEnum,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "@auth/core/adapters";
 import { relations, sql } from "drizzle-orm";
+import { z } from "zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
 export const users = pgTable("user", {
   id: text("id").notNull().primaryKey(),
@@ -82,25 +86,64 @@ export const verificationTokens = pgTable(
   }),
 );
 
-export const company = pgTable(
-  "company",
-  {
-     id: serial("id").primaryKey(),
-     name: text("name").notNull(),
-     createdById: varchar("createdById", { length: 255 })
-       .notNull()
-       .references(() => users.id),
-     createdAt: timestamp("created_at")
-       .default(sql`CURRENT_TIMESTAMP`)
-       .notNull(),
-     updatedAt: timestamp("updatedAt"),
-  }
- );
+export const company = pgTable("company", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  createdById: varchar("createdById", { length: 255 })
+    .notNull()
+    .references(() => users.id),
+  createdAt: timestamp("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt"),
+});
 
 export const companyRelations = relations(company, ({ one }) => ({
   user: one(users, { fields: [company.id], references: [users.id] }),
+  products: one(products, { fields: [company.id], references: [products.id] }),
 }));
 
+//products
+
+export const role = pgEnum("role", ["admin", "user"]);
+export const productStatus = pgEnum("productStatus", [
+  "sold",
+  "available",
+  "hold",
+]);
+
+export const products = pgTable("product", {
+  id: text("id")
+    .default(sql`gen_random_uuid()`)
+    .notNull()
+    .primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  price: doublePrecision("price").notNull(),
+  tax: doublePrecision("tax").notNull(),
+  total: doublePrecision("total").notNull(),
+  image: text("image").notNull(),
+  status: productStatus("status").notNull(),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+});
+
+export const productsRelations = relations(products, ({ one }) => ({
+  company: one(company, { fields: [products.id], references: [company.id] }),
+}));
+
+export const insertProductSchema = createInsertSchema(products, {
+  price: z.coerce.number(),
+  tax: z.coerce.number(),
+});
+
+// Schema for selecting a product - can be used to validate API responses
+export const selectProductSchema = createSelectSchema(products, {
+  price: z.coerce.number(),
+  tax: z.coerce.number(),
+});
+
+export const insertCompanySchema = createInsertSchema(company);
+export const selectCompanySchema = createSelectSchema(company);
 
 // drizzle-orm
 // drizzle-kit
@@ -137,3 +180,4 @@ export const companyRelations = relations(company, ({ one }) => ({
 // Ref: invoices.company_id - companies.id // one-to-one
 // Ref: companies_clients.client_id <> clients.id // many-to-many
 // Ref: companies_clients.company_id <> companies.id // many-to-many
+

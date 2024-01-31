@@ -13,8 +13,7 @@ export const publicRoutes = [
    * @type {string[]}
    */
   export const authRoutes = [
-    "src/app/auth/login",
-    "/auth/register",
+    "/auth/login",
     "/auth/error"
   ];
   
