@@ -19,7 +19,7 @@ const id = selectCompanySchema.pick({ id: true });
 
 export const companyRouter = createTRPCRouter({
   create: protectedProcedure
-    .input(CompanySchema)
+    .input(insertCompanySchema.pick({name:true}))
     .mutation(async ({ ctx, input }) => {
       await ctx.db.insert(company).values({
         name: input.name,

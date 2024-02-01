@@ -1,11 +1,9 @@
-import type { NextAuthConfig } from "next-auth"; // Importing NextAuthConfig type
-import Credentials from "next-auth/providers/credentials"; // Importing Credentials provider for NextAuth
-import Github from "next-auth/providers/github"; // Importing Github provider for NextAuth
-import Google from "next-auth/providers/google"; // Importing Google provider for NextAuth
+import type { NextAuthConfig } from "next-auth";
+import Credentials from "next-auth/providers/credentials"; 
+import Github from "next-auth/providers/github"; 
+import Google from "next-auth/providers/google"; 
 import { LoginSchema } from "@/lib/validations/auth";
- // Importing login schema for validation // Importing function to get user by email
-
-
+ 
 //  middleware uses edge, but prisma does not uses edge.thats why we created this file.
     
 
@@ -29,13 +27,6 @@ const nextAuthConfig: NextAuthConfig = {
 
         if (validatedFields.success) {
           const { email, password } = validatedFields.data; // Extracting email and password from validated credentials
-          
-          // Retrieving user details from the database by email
-
-          // Comparing the provided password with the hashed password stored in the database
-          
-
-          // If passwords match, return the user object; otherwise, return null
         }
 
         return null; // Return null if credentials are invalid or user not found
@@ -46,4 +37,4 @@ const nextAuthConfig: NextAuthConfig = {
 
 
 
-export default nextAuthConfig; // Exporting the NextAuth configuration object
+export default nextAuthConfig; 

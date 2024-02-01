@@ -1,11 +1,11 @@
-import { columns } from "@/components/admin/company/columns";
+import { columns } from "@/components/admin/products/columns";
 import { Button } from "@/components/ui/button";
 import { auth } from "@/server/auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import React, { useState } from "react";
+import React from "react";
 import NoSSR from "@/components/no-ssr";
-import ProductsTable from "@/components/admin/company/products-table";
+import ProductsTable from "@/components/admin/products/products-table";
 import { api } from "@/trpc/server";
 
 
@@ -40,6 +40,8 @@ const NotebookPage = async ({ params: { compId } }: Props) => {
 
         <div className="h-4"></div>
         <div className="w-full rounded-lg border border-stone-200 px-16 py-8 shadow-xl">
+
+          {/* here i import my product table */}
         <NoSSR>
         <ProductsTable columns={columns} initialData={products} />
         </NoSSR>

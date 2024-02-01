@@ -64,6 +64,7 @@ const CompanyForm = ({ btn, formBtnTitle, values }: Props) => {
         <div className="flex-1 overflow-auto">
           <Form {...form}>
             <form className="grid grid-cols-4 gap-4">
+              
               {/* title */}
               <FormField
                 control={form.control}

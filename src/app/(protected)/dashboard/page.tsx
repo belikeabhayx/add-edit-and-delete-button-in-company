@@ -1,20 +1,12 @@
 import React from "react";
-import { auth } from "@/server/auth";
-import Header from "@/components/dashboard/navbar/header";
-import DashboardPage from "@/components/dashboard/mainPage/mainpage";
-import ProductsTable from "@/components/admin/company/products-table";
-import NoSSR from "@/components/no-ssr";
+import Header from "@/components/admin/dashboard/navbar/header";
+import DashboardPage from "@/components/admin/dashboard/mainPage/mainpage";
 
-import { api } from "@/trpc/server";
-import { columns } from "@/components/admin/company/columns";
-
-const SettingsPage = async () => {
-  const session = await auth();
+const SettingsPage = () => {
   
-
   return (
     <div>
-      <Header/>
+      <Header />
       <DashboardPage />
     </div>
   );

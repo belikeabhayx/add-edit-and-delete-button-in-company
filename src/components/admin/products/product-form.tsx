@@ -63,7 +63,7 @@ const ProductForm = ({ btn, formBtnTitle, values }: Props) => {
     },
   });
 
-  // Calculate total price based on price and tax rate
+  // logic for total price based on price and tax rate
   useEffect(() => {
     if (form.watch("price") && form.watch("tax")) {
       const taxRate = form.watch("tax");

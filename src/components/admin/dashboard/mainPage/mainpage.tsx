@@ -41,6 +41,7 @@ const MainPage = () => {
     setIsModalOpen(true);
   };
 
+  
   const handleSaveClick = () => {
     setIsModalOpen(false);
     const newId =
@@ -56,7 +57,7 @@ const MainPage = () => {
     });
   };
 
-  const { data, isLoading } = api.company.read.useQuery();
+  const { data } = api.company.read.useQuery();
 
   const utils = api.useUtils();
 
@@ -78,16 +79,15 @@ const MainPage = () => {
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        // createCompany.mutate({ name: inputName });
       }}
     >
       <Dialog>
         <div className="mt-20 flex items-center justify-center">
           <DialogTrigger asChild>
             <button onClick={handleButtonClick} className="border">
-              <div className="flex h-full flex-row items-center justify-center rounded-lg border-2 border-dashed border-blue-950 p-4 transition hover:-translate-y-1 hover:shadow-xl sm:flex-col">
-                <Plus className="h-6 w-6 text-blue-950" strokeWidth={3} />
-                <h2 className="font-semibold text-blue-950 sm:mt-2">
+              <div className="flex h-full flex-row items-center justify-center rounded-lg border-2 border-dashed border-green-600 p-4 transition hover:-translate-y-1 hover:shadow-xl sm:flex-col">
+                <Plus className="h-6 w-6 text-green-600" strokeWidth={3} />
+                <h2 className="font-semibold text-green-600 sm:mt-2">
                   Create Company
                 </h2>
               </div>

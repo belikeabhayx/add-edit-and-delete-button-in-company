@@ -17,6 +17,7 @@ export type Product = z.infer<typeof selectProductSchema> & {
 };
 
 export const columns: ColumnDef<Product>[] = [
+      // id
   {
     accessorKey: "id",
     header: "ID",
@@ -26,6 +27,7 @@ export const columns: ColumnDef<Product>[] = [
       <p className="w-24 truncate">{getValue<Product["id"]>()}</p>
     ),
   },
+    //  name
   {
     accessorKey: "image",
     header: "Image",
@@ -36,10 +38,12 @@ export const columns: ColumnDef<Product>[] = [
       </Avatar>
     ),
   },
+    // title
   {
     accessorKey: "title",
     header: ({ column }) => <ColumnHeader column={column} title="Title" />,
   },
+    // description
   {
     accessorKey: "description",
     header: ({ column }) => (
@@ -49,6 +53,7 @@ export const columns: ColumnDef<Product>[] = [
       <p className="w-96 truncate">{getValue<Product["description"]>()}</p>
     ),
   },
+    //  status
   {
     accessorKey: "status",
     header: ({ column }) => <ColumnHeader column={column} title="Status" />,
@@ -80,6 +85,7 @@ export const columns: ColumnDef<Product>[] = [
       return value.includes(row.getValue(id));
     },
   },
+    // price
   {
     accessorKey: "price",
     header: ({ column }) => <ColumnHeader column={column} title="Price" />,
@@ -94,16 +100,19 @@ export const columns: ColumnDef<Product>[] = [
       return <div className="text-right font-medium">{formatted}</div>;
     },
   },
+    // tax
   {
     accessorKey: "tax",
     header: "Tax (%)",
     cell: ({ getValue }) => (getValue<Product["tax"]>()),
   },
+    // total
   {
     accessorKey: "total",
     header: "Total",
     cell: ({ getValue }) => (getValue<Product["total"]>()),
   },
+    // actions
   {
     id: "actions",
     header: "Actions",

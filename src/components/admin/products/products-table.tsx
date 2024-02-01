@@ -1,6 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
+import { DataTable } from "@/components/ui/data-table/data-table";
+import { api } from "@/trpc/react";
+import ProductsTableToolbar from "./products-table-toolbar";
+import { Product } from "./columns";
 import {
   type ColumnDef,
   getCoreRowModel,
@@ -14,12 +19,6 @@ import {
   getFacetedUniqueValues,
   getFacetedRowModel,
 } from "@tanstack/react-table";
-
-import { Product } from "./columns";
-import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
-import { DataTable } from "@/components/ui/data-table/data-table";
-import ProductsTableToolbar from "./products-table-toolbar";
-import { api } from "@/trpc/react";
 
 type ProductsTableProps = {
   columns: ColumnDef<Product>[];
