@@ -26,6 +26,7 @@ export const users = pgTable("user", {
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
   company: many(company),
+  customer: many(customer),
 }));
 
 export const accounts = pgTable(
@@ -144,6 +145,23 @@ export const selectProductSchema = createSelectSchema(products, {
 
 export const insertCompanySchema = createInsertSchema(company);
 export const selectCompanySchema = createSelectSchema(company);
+
+
+export const customer = pgTable("product", {
+  id: text("id")
+    .default(sql`gen_random_uuid()`)
+    .notNull()
+    .primaryKey(),
+  title: text("title").notNull(),
+  Pno: text("pno").notNull(),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+});
+
+export const customerRelations = relations(customer, ({ one }) => ({
+  user: one(users, { fields: [customer.id], references: [users.id] }),
+}));
+
+export const insertCustomerSchema = createInsertSchema(customer);
 
 // drizzle-orm
 // drizzle-kit

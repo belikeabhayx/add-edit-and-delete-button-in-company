@@ -100,8 +100,14 @@ export const columns: ColumnDef<Product>[] = [
       return <div className="text-right font-medium">{formatted}</div>;
     },
   },
-    // tax
+    // CGST
   {
+    accessorKey: "tax",
+    header: "Tax (%)",
+    cell: ({ getValue }) => (getValue<Product["tax"]>()),
+  },
+   // SGST
+   {
     accessorKey: "tax",
     header: "Tax (%)",
     cell: ({ getValue }) => (getValue<Product["tax"]>()),
