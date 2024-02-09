@@ -1,16 +1,13 @@
-import { z } from "zod";
 
 import {
   createTRPCRouter,
   protectedProcedure,
-  publicProcedure,
 } from "@/server/api/trpc";
 import {
   company,
   insertCompanySchema,
   selectCompanySchema,
 } from "@/server/db/schema";
-import { CompanySchema } from "@/lib/validations/auth";
 import { eq } from "drizzle-orm";
 
 
@@ -19,10 +16,13 @@ const id = selectCompanySchema.pick({ id: true });
 
 export const companyRouter = createTRPCRouter({
   create: protectedProcedure
-    .input(insertCompanySchema.pick({name:true}))
+    .input(insertCompanySchema)
     .mutation(async ({ ctx, input }) => {
       await ctx.db.insert(company).values({
-        name: input.name,
+        legalname: input.legalname,
+        businessname: input.businessname,
+        GSTIN: input.GSTIN,
+        pan: input.pan,
         createdById: ctx.session.user.id,
       });
     }),

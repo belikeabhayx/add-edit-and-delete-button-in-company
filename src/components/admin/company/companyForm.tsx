@@ -65,13 +65,58 @@ const CompanyForm = ({ btn, formBtnTitle, values }: Props) => {
           <Form {...form}>
             <form className="grid grid-cols-4 gap-4">
               
-              {/* title */}
+              {/* Legal Name */}
               <FormField
                 control={form.control}
-                name="name"
+                name="legalname"
                 render={({ field }) => (
                   <FormItem className="col-span-4">
-                    <FormLabel>Title</FormLabel>
+                    <FormLabel>legalname</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* businessname */}
+              <FormField
+                control={form.control}
+                name="businessname"
+                render={({ field }) => (
+                  <FormItem className="col-span-4">
+                    <FormLabel>businessname</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* GSTIN */}
+              <FormField
+                control={form.control}
+                name="GSTIN"
+                render={({ field }) => (
+                  <FormItem className="col-span-4">
+                    <FormLabel>GSTIN</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* pan */}
+              <FormField
+                control={form.control}
+                name="pan"
+                render={({ field }) => (
+                  <FormItem className="col-span-4">
+                    <FormLabel>pan</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>

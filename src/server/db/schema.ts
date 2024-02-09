@@ -89,7 +89,10 @@ export const verificationTokens = pgTable(
 
 export const company = pgTable("company", {
   id: serial("id").primaryKey(),
-  name: text("name").notNull(),
+  legalname: text("legalname").notNull(),
+  businessname: text("businessname").notNull(),
+  GSTIN: text("GSTIN").notNull(),
+  pan: text("pan").notNull(),
   createdById: varchar("createdById", { length: 255 })
     .notNull()
     .references(() => users.id),
@@ -118,13 +121,14 @@ export const products = pgTable("product", {
     .default(sql`gen_random_uuid()`)
     .notNull()
     .primaryKey(),
-  title: text("title").notNull(),
-  description: text("description").notNull(),
+  name: text("name").notNull(),
+  hsn: doublePrecision("hsn").notNull(),
+  quantity: integer("quantity").notNull(),
   price: doublePrecision("price").notNull(),
-  tax: doublePrecision("tax").notNull(),
-  total: doublePrecision("total").notNull(),
-  image: text("image").notNull(),
-  status: productStatus("status").notNull(),
+  gst: doublePrecision("gst").notNull(),
+  cgst: doublePrecision("cgst"),
+  taxableamount: doublePrecision("total").notNull(),
+  amount: doublePrecision("total").notNull(),
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
 });
 
@@ -134,13 +138,13 @@ export const productsRelations = relations(products, ({ one }) => ({
 
 export const insertProductSchema = createInsertSchema(products, {
   price: z.coerce.number(),
-  tax: z.coerce.number(),
+  amount: z.coerce.number(),
 });
 
 // Schema for selecting a product - can be used to validate API responses
 export const selectProductSchema = createSelectSchema(products, {
   price: z.coerce.number(),
-  tax: z.coerce.number(),
+  amount: z.coerce.number(),
 });
 
 export const insertCompanySchema = createInsertSchema(company);
