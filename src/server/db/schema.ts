@@ -147,7 +147,7 @@ export const insertCompanySchema = createInsertSchema(company);
 export const selectCompanySchema = createSelectSchema(company);
 
 
-export const customer = pgTable("product", {
+export const customer = pgTable("customer", {
   id: text("id")
     .default(sql`gen_random_uuid()`)
     .notNull()

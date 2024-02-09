@@ -22,9 +22,9 @@ export const customerRouter = createTRPCRouter({
         Pno: input.Pno,
       });
     }),
-//   read: protectedProcedure.query(async ({ ctx, input }) => {
-//     return await ctx.db.query.company.findMany();
-//   }),
+  read: protectedProcedure.query(async ({ ctx, input }) => {
+    return await ctx.db.query.customer.findMany();
+  }),
   createOrUpdate: protectedProcedure
     .input(insertCustomerSchema)
     .mutation(async ({ ctx, input }) => {

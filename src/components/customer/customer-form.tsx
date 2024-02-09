@@ -29,10 +29,9 @@ type Props = {
   btn: React.ReactNode;
   formBtnTitle: string;
   values?: z.infer<typeof insertCustomerSchema>;
-  onNewOption: (values: z.infer<typeof insertCustomerSchema>) => void; // Added onNewOption property
 };
 
-const CustomerForm = ({ btn, formBtnTitle, values, onNewOption }: Props) => {
+const CustomerForm = ({ btn, formBtnTitle, values }: Props) => {
   const [open, setOpen] = React.useState(false);
   const form = useForm<z.infer<typeof insertCustomerSchema>>({
     resolver: zodResolver(insertCustomerSchema),
@@ -41,7 +40,6 @@ const CustomerForm = ({ btn, formBtnTitle, values, onNewOption }: Props) => {
 
   const onSubmit = async (values: z.infer<typeof insertCustomerSchema>) => {
     await createOrUpdateProduct.mutateAsync(values);
-    onNewOption(values);
   };
 
   const createOrUpdateProduct = api.customer.createOrUpdate.useMutation({
