@@ -1,21 +1,18 @@
-"use client";
-import CustomerForm from "@/components/admin/customerSelect/customer-form";
-import { Button } from "@/components/ui/button";
-import { api } from "@/trpc/react";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { PackagePlus } from 'lucide-react';
+import React from 'react'
+import CustomerForm from './customer-form';
+import { api } from '@/trpc/react';
+import { z } from 'zod';
+import { insertCustomerSchema } from '@/server/db/schema';
 
-import { PackagePlus } from "lucide-react";
-import React from "react";
+type CustomerSelectProp = {
+  initialData: [z.infer<typeof insertCustomerSchema>]
+}
 
-export default function AnimatedMulti() {
+const customerSelect = (props: CustomerSelectProp) => {
+
   const { data } = api.customer.read.useQuery();
 
   return (
@@ -54,3 +51,5 @@ export default function AnimatedMulti() {
     </div>
   );
 }
+export default customerSelect
+
