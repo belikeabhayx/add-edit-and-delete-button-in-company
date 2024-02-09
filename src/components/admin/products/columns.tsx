@@ -4,7 +4,6 @@ import { Badge, Loader2, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import * as z from "zod";
 import React from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import { api } from "@/trpc/react";
 import { selectProductSchema } from "@/server/db/schema";
@@ -12,8 +11,9 @@ import { ColumnHeader } from "@/components/ui/data-table/data-table-column-heade
 import ProductForm from "./product-form";
 
 export type Product = z.infer<typeof selectProductSchema> & {
-  tax: number;
-  total: number;
+  cgst: number;
+  gst: number;
+  amount: number;
 };
 
 export const columns: ColumnDef<Product>[] = [
@@ -27,63 +27,23 @@ export const columns: ColumnDef<Product>[] = [
       <p className="w-24 truncate">{getValue<Product["id"]>()}</p>
     ),
   },
-    //  name
+    // name
   {
-    accessorKey: "image",
-    header: "Image",
-    cell: ({ getValue }) => (
-      <Avatar>
-        <AvatarImage src={getValue<string>()} alt="@shadcn" />
-        <AvatarFallback>CN</AvatarFallback>
-      </Avatar>
-    ),
+    accessorKey: "name",
+    header: ({ column }) => <ColumnHeader column={column} title="Name" />,
+    cell: ({ getValue }) => (getValue<Product["name"]>()),
   },
-    // title
-  {
-    accessorKey: "title",
-    header: ({ column }) => <ColumnHeader column={column} title="Title" />,
+   // HSN
+   {
+    accessorKey: "hsn",
+    header: "HSN",
+    cell: ({ getValue }) => (getValue<Product["hsn"]>()),
   },
-    // description
+  // Quantity
   {
-    accessorKey: "description",
-    header: ({ column }) => (
-      <ColumnHeader column={column} title="Description" />
-    ),
-    cell: ({ getValue }) => (
-      <p className="w-96 truncate">{getValue<Product["description"]>()}</p>
-    ),
-  },
-    //  status
-  {
-    accessorKey: "status",
-    header: ({ column }) => <ColumnHeader column={column} title="Status" />,
-    cell: ({ getValue }) => {
-      const status = getValue<Product["status"]>();
-
-      switch (status) {
-        case "available":
-          return (
-            <Badge className="rounded-sm bg-green-300 text-green-950">
-              {status}
-            </Badge>
-          );
-        case "sold":
-          return (
-            <Badge className="rounded-sm bg-blue-300 text-blue-950">
-              {status}
-            </Badge>
-          );
-        case "hold":
-          return (
-            <Badge className="rounded-sm">
-              {status}
-            </Badge>
-          );
-      }
-    },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
-    },
+    accessorKey: "quantity",
+    header: "quantity",
+    cell: ({ getValue }) => (getValue<Product["quantity"]>()),
   },
     // price
   {
@@ -102,21 +62,27 @@ export const columns: ColumnDef<Product>[] = [
   },
     // CGST
   {
-    accessorKey: "tax",
-    header: "Tax (%)",
-    cell: ({ getValue }) => (getValue<Product["tax"]>()),
+    accessorKey: "cgst",
+    header: "CGST (%)",
+    cell: ({ getValue }) => (getValue<Product["cgst"]>()),
   },
-   // SGST
+   // GST
    {
-    accessorKey: "tax",
-    header: "Tax (%)",
-    cell: ({ getValue }) => (getValue<Product["tax"]>()),
+    accessorKey: "gst",
+    header: "GST (%)",
+    cell: ({ getValue }) => (getValue<Product["gst"]>()),
   },
-    // total
+    // Taxable Amount
   {
-    accessorKey: "total",
-    header: "Total",
-    cell: ({ getValue }) => (getValue<Product["total"]>()),
+    accessorKey: "taxableamount",
+    header: "taxableAmount",
+    cell: ({ getValue }) => (getValue<Product["taxableamount"]>()),
+  },
+   // Amount
+   {
+    accessorKey: "amount",
+    header: "Amount",
+    cell: ({ getValue }) => (getValue<Product["amount"]>()),
   },
     // actions
   {

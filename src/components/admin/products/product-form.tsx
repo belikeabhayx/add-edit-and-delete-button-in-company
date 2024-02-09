@@ -20,17 +20,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { insertProductSchema } from "@/server/db/schema";
-import RichTextEditor from "@/components/ui/rich-text-editor";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import { api } from "@/trpc/react";
 
@@ -63,15 +54,35 @@ const ProductForm = ({ btn, formBtnTitle, values }: Props) => {
     },
   });
 
+
+
   // logic for total price based on price and tax rate
   useEffect(() => {
-    if (form.watch("price") && form.watch("tax")) {
-      const taxRate = form.watch("tax");
-      const price = form.watch("price");
-      const total = price * (1 + taxRate / 100);
-      form.setValue("total", total);
+    const price = form.watch("price");
+    const cgstRate = form.watch("cgst") ||  0;
+    const gstRate = form.watch("gst") ||  0;
+    if (price !== undefined && cgstRate !== undefined && gstRate !== undefined) {
+      const total = price * (1 + cgstRate /  100) * (1 + gstRate /  100);
+      form.setValue("amount", total);
     }
-  }, [form.watch("price"), form.watch("tax")]);
+  }, [form.watch("price"), form.watch("cgst"), form.watch("gst")]);
+
+  // logic for calculating Taxable Amount
+  useEffect(() => {
+    const amount = form.watch("amount");
+    const price = form.watch("price");
+    const total = amount - price;
+    form.setValue("taxableamount", total);
+  }, [form.watch("amount"), form.watch("price")]);
+  
+  useEffect(() => {
+   const quantity = form.watch("quantity");
+   const price = form.watch("price")
+   const total = price * quantity;
+   form.setValue("amount", total)
+  }, [form.watch("price"), form.watch("quantity")])
+  
+
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -83,14 +94,13 @@ const ProductForm = ({ btn, formBtnTitle, values }: Props) => {
         <div className="flex-1 overflow-auto">
           <Form {...form}>
             <form className="grid grid-cols-4 gap-4">
-
-              {/* title */}
+              {/* Name */}
               <FormField
                 control={form.control}
-                name="title"
+                name="name"
                 render={({ field }) => (
                   <FormItem className="col-span-4">
-                    <FormLabel>Title</FormLabel>
+                    <FormLabel>Name</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -99,60 +109,30 @@ const ProductForm = ({ btn, formBtnTitle, values }: Props) => {
                 )}
               />
 
-              {/* description */}
+              {/* HSN */}
               <FormField
                 control={form.control}
-                name="description"
+                name="hsn"
                 render={({ field }) => (
                   <FormItem className="col-span-4">
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel>HSN</FormLabel>
                     <FormControl>
-                      <RichTextEditor
-                        onChange={field.onChange}
-                        value={field.value}
-                      />
+                      <Input {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              {/* image */}
+              {/* Quantity */}
               <FormField
                 control={form.control}
-                name="image"
-                render={({ field: { onChange, value, ...rest } }) => (
+                name="quantity"
+                render={({ field }) => (
                   <FormItem className="col-span-4">
-                    <FormLabel>Image</FormLabel>
+                    <FormLabel>Quantity</FormLabel>
                     <FormControl>
-                      <div className="flex items-center gap-2">
-                        <Input
-                          type="file"
-                          accept=".jpg, .jpeg, .png"
-                          onChange={(e) => {
-                            const target = e.target as HTMLInputElement & {
-                              files: FileList;
-                            };
-
-                            const file = target.files[0];
-                            if (!file) return;
-
-                            const reader = new FileReader();
-                            reader.readAsDataURL(file);
-                            reader.onload = () => {
-                              const base64Image = reader.result;
-                              if (!base64Image) return;
-                              onChange(base64Image.toString());
-                            };
-                          }}
-                          {...rest}
-                        />
-                        {value && (
-                          <Avatar className="h-10 w-10 rounded-md">
-                            <AvatarImage src={value} />
-                          </Avatar>
-                        )}
-                      </div>
+                      <Input {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -174,13 +154,28 @@ const ProductForm = ({ btn, formBtnTitle, values }: Props) => {
                 )}
               />
 
-              {/* tax rate */}
+              {/* CGST */}
               <FormField
                 control={form.control}
-                name="tax"
+                name="cgst"
                 render={({ field }) => (
                   <FormItem className="col-span-2">
-                    <FormLabel>Tax Rate (%)</FormLabel>
+                    <FormLabel>CGST (%)</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} min={0} max={100} value={field.value ??  0} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* GST */}
+              <FormField
+                control={form.control}
+                name="gst"
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormLabel>GST (%)</FormLabel>
                     <FormControl>
                       <Input type="number" {...field} min={0} max={100} />
                     </FormControl>
@@ -189,13 +184,13 @@ const ProductForm = ({ btn, formBtnTitle, values }: Props) => {
                 )}
               />
 
-              {/* total price */}
+              {/* Taxable Amount */}
               <FormField
                 control={form.control}
-                name="total"
+                name="taxableamount"
                 render={({ field }) => (
                   <FormItem className="col-span-2">
-                    <FormLabel>Total Price</FormLabel>
+                    <FormLabel>Taxable Amount</FormLabel>
                     <FormControl>
                       <Input type="number" {...field} readOnly />
                     </FormControl>
@@ -204,27 +199,15 @@ const ProductForm = ({ btn, formBtnTitle, values }: Props) => {
                 )}
               />
 
-              {/* status */}
+              {/* Amount */}
               <FormField
                 control={form.control}
-                name="status"
+                name="amount"
                 render={({ field }) => (
                   <FormItem className="col-span-2">
-                    <FormLabel>Status</FormLabel>
+                    <FormLabel>Amount</FormLabel>
                     <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="available">Available</SelectItem>
-                          <SelectItem value="sold">Sold</SelectItem>
-                          <SelectItem value="hold">Hold</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <Input type="number" {...field} readOnly />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
