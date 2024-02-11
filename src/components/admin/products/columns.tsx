@@ -10,11 +10,7 @@ import { selectProductSchema } from "@/server/db/schema";
 import { ColumnHeader } from "@/components/ui/data-table/data-table-column-header";
 import ProductForm from "./product-form";
 
-export type Product = z.infer<typeof selectProductSchema> & {
-  cgst: number;
-  gst: number;
-  amount: number;
-};
+export type Product = z.infer<typeof selectProductSchema>;
 
 export const columns: ColumnDef<Product>[] = [
       // id

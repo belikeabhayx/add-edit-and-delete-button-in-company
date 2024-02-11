@@ -1,22 +1,30 @@
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { PackagePlus } from 'lucide-react';
-import React from 'react'
-import CustomerForm from './customer-form';
-import { api } from '@/trpc/react';
-import { z } from 'zod';
-import { insertCustomerSchema } from '@/server/db/schema';
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { PackagePlus } from "lucide-react";
+import React from "react";
+import CustomerForm from "./customer-form";
+
+import { z } from "zod";
+import { insertCustomerSchema } from "@/server/db/schema";
+import { api } from "@/trpc/server";
 
 type CustomerSelectProp = {
-  initialData: [z.infer<typeof insertCustomerSchema>]
-}
+  initialData: z.infer<typeof insertCustomerSchema>[];
+};
 
-const customerSelect = (props: CustomerSelectProp) => {
-
-  const { data } = api.customer.read.useQuery();
+const customerSelect = async(props: CustomerSelectProp) => {
+  const data  = await api.customer.read.query();
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
+    <div className="flex items-center justify-start mb-32 mt-16">
       <div className="mx-auto flex w-full max-w-md items-center space-x-4">
         <div>
           <Select>
@@ -50,6 +58,6 @@ const customerSelect = (props: CustomerSelectProp) => {
       </div>
     </div>
   );
-}
-export default customerSelect
+};
 
+export default customerSelect;

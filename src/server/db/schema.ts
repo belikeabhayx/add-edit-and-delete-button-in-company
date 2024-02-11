@@ -126,7 +126,7 @@ export const products = pgTable("product", {
   quantity: integer("quantity").notNull(),
   price: doublePrecision("price").notNull(),
   gst: doublePrecision("gst").notNull(),
-  cgst: doublePrecision("cgst"),
+  cgst: doublePrecision("cgst").notNull(),
   taxableamount: doublePrecision("taxableamount").notNull(),
   amount: doublePrecision("total").notNull(),
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),

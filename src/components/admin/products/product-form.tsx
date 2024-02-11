@@ -22,8 +22,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { insertProductSchema } from "@/server/db/schema";
-import { toast } from "sonner";
 import { api } from "@/trpc/react";
+import { toast } from "sonner";
 
 type Props = {
   btn: React.ReactNode;
@@ -42,10 +42,13 @@ const ProductForm = ({ btn, formBtnTitle, values }: Props) => {
     await createOrUpdateProduct.mutateAsync(values);
   };
 
+  const utils = api.useUtils();
+
   const createOrUpdateProduct = api.product.createOrUpdate.useMutation({
     onSuccess: () => {
       setOpen(false);
       form.reset();
+      utils.product.invalidate();
       toast.success(values?.id ? "Product updated!" : "Product created!");
     },
     onError: () => {
@@ -54,35 +57,28 @@ const ProductForm = ({ btn, formBtnTitle, values }: Props) => {
     },
   });
 
-
-
   // logic for total price based on price and tax rate
   useEffect(() => {
     const price = form.watch("price");
-    const cgstRate = form.watch("cgst") ||  0;
-    const gstRate = form.watch("gst") ||  0;
-    if (price !== undefined && cgstRate !== undefined && gstRate !== undefined) {
-      const total = price * (1 + cgstRate /  100) * (1 + gstRate /  100);
-      form.setValue("amount", total);
-    }
+    const cgstRate = form.watch("cgst");
+    const gstRate = form.watch("gst");
+    const amount = form.watch("amount");
+    const quantity = form.watch("quantity");
+
+    const total = price * (1 + cgstRate / 100) * (1 + gstRate / 100) * quantity;
+    form.setValue("amount", total);
+    const totals = (total - price) * quantity;
+    form.setValue("taxableamount", totals);
   }, [form.watch("price"), form.watch("cgst"), form.watch("gst")]);
 
   // logic for calculating Taxable Amount
-  useEffect(() => {
-    const amount = form.watch("amount");
-    const price = form.watch("price");
-    const total = amount - price;
-    form.setValue("taxableamount", total);
-  }, [form.watch("amount"), form.watch("price")]);
-  
-  useEffect(() => {
-   const quantity = form.watch("quantity");
-   const price = form.watch("price")
-   const total = price * quantity;
-   form.setValue("amount", total)
-  }, [form.watch("price"), form.watch("quantity")])
-  
-
+  // useEffect(() => {
+  //   const amount = form.watch("amount");
+  //   const price = form.watch("price");
+  //   const quantity = form.watch("quantity");
+  //   const total = quantity * (amount - price);
+  //   form.setValue("taxableamount", total);
+  // }, [form.watch("amount"), form.watch("price")]);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -162,7 +158,13 @@ const ProductForm = ({ btn, formBtnTitle, values }: Props) => {
                   <FormItem className="col-span-2">
                     <FormLabel>CGST (%)</FormLabel>
                     <FormControl>
-                      <Input type="number" {...field} min={0} max={100} value={field.value ??  0} />
+                      <Input
+                        type="number"
+                        {...field}
+                        min={0}
+                        max={100}
+                        value={field.value ?? 0}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

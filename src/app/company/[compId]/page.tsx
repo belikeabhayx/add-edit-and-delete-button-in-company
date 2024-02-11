@@ -8,8 +8,8 @@ import NoSSR from "@/components/no-ssr";
 import ProductsTable from "@/components/admin/products/products-table";
 import { api } from "@/trpc/server";
 import CustomerSelect from "@/components/admin/customerSelect/customerSelect";
-import SideNavbar from "@/components/yooooooo";
-
+import SideNavbar from "@/components/admin/dashboard/navbar/sidenav";
+import Summary from "@/components/summary/summary";
 
 type Props = {
   params: {
@@ -23,7 +23,7 @@ const NotebookPage = async ({ params: { compId } }: Props) => {
     return redirect("/dashboard");
   }
   const products = await api.product.read.query();
-  const data = await api.customer.read.query();
+  const customer = await api.customer.read.query();
 
   return (
     <div className="grainy min-h-screen p-8">
@@ -46,10 +46,12 @@ const NotebookPage = async ({ params: { compId } }: Props) => {
         <div className="w-full ml-10 rounded-lg border border-stone-200 px-16 py-8 shadow-xl">
 
           {/* here i import my product table */}
-          
+          <CustomerSelect initialData={customer}/>
         <NoSSR>
+          
         <ProductsTable columns={columns} initialData={products} />
         </NoSSR>
+        <Summary/>
         </div>
       </div>
     </div>
