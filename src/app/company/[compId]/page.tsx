@@ -9,7 +9,7 @@ import ProductsTable from "@/components/admin/products/products-table";
 import { api } from "@/trpc/server";
 import CustomerSelect from "@/components/admin/customerSelect/customerSelect";
 import SideNavbar from "@/components/admin/dashboard/navbar/sidenav";
-import Summary from "@/components/summary/summary";
+import Summary from "@/components/admin/summary/summary";
 
 type Props = {
   params: {

@@ -1,6 +1,6 @@
 
 
-import Summary from '@/components/summary/summary'
+import Summary from '@/components/admin/summary/summary'
 import React from 'react'
 
 const page = () => {

@@ -62,23 +62,21 @@ const ProductForm = ({ btn, formBtnTitle, values }: Props) => {
     const price = form.watch("price");
     const cgstRate = form.watch("cgst");
     const gstRate = form.watch("gst");
-    const amount = form.watch("amount");
     const quantity = form.watch("quantity");
 
-    const total = price * (1 + cgstRate / 100) * (1 + gstRate / 100) * quantity;
-    form.setValue("amount", total);
-    const totals = (total - price) * quantity;
-    form.setValue("taxableamount", totals);
-  }, [form.watch("price"), form.watch("cgst"), form.watch("gst")]);
+    // Calculate the total amount including GST // math.round
+    const totalWithGST = Math.round(price * (1 + cgstRate /   100) * (1 + gstRate /   100) * quantity);
+    form.setValue("amount", totalWithGST);
 
-  // logic for calculating Taxable Amount
-  // useEffect(() => {
-  //   const amount = form.watch("amount");
-  //   const price = form.watch("price");
-  //   const quantity = form.watch("quantity");
-  //   const total = quantity * (amount - price);
-  //   form.setValue("taxableamount", total);
-  // }, [form.watch("amount"), form.watch("price")]);
+    // Calculate the taxable amount
+    const taxableAmount = Math.round(totalWithGST - price * quantity);
+    form.setValue("taxableamount", taxableAmount);
+  }, [
+    form.watch("price"),
+    form.watch("cgst"),
+    form.watch("gst"),
+    form.watch("quantity"),
+  ]);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
