@@ -24,6 +24,7 @@ import { Input } from "@/components/ui/input";
 import { insertProductSchema } from "@/server/db/schema";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
+import useStore from "@/hook/use-store";
 
 type Props = {
   btn: React.ReactNode;
@@ -32,6 +33,7 @@ type Props = {
 };
 
 const ProductForm = ({ btn, formBtnTitle, values }: Props) => {
+  const setCustomerForm = useStore((state) => state.setCustomerForm);
   const [open, setOpen] = React.useState(false);
   const form = useForm<z.infer<typeof insertProductSchema>>({
     resolver: zodResolver(insertProductSchema),
@@ -65,7 +67,9 @@ const ProductForm = ({ btn, formBtnTitle, values }: Props) => {
     const quantity = form.watch("quantity");
 
     // Calculate the total amount including GST // math.round
-    const totalWithGST = Math.round(price * (1 + cgstRate /   100) * (1 + gstRate /   100) * quantity);
+    const totalWithGST = Math.round(
+      price * (1 + cgstRate / 100) * (1 + gstRate / 100) * quantity,
+    );
     form.setValue("amount", totalWithGST);
 
     // Calculate the taxable amount
@@ -213,7 +217,9 @@ const ProductForm = ({ btn, formBtnTitle, values }: Props) => {
                   </FormItem>
                 )}
               />
+              <Button onClick={setCustomerForm}>add zustand</Button>
             </form>
+            <Button onClick={setCustomerForm}>add customer</Button>
           </Form>
         </div>
         <SheetFooter>

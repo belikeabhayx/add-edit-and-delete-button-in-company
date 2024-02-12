@@ -46,7 +46,7 @@ const NotebookPage = async ({ params: { compId } }: Props) => {
         <div className="w-full ml-10 rounded-lg border border-stone-200 px-16 py-8 shadow-xl">
 
           {/* here i import my product table */}
-          <CustomerSelect initialData={customer}/>
+          {/* <CustomerSelect initialData={customer}/> */}
         <NoSSR>
           
         <ProductsTable columns={columns} initialData={products} />

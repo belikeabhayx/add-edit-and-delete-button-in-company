@@ -15,6 +15,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { FacetedFilter } from "@/components/ui/data-table/data-table-faceted-filter";
 import ProductForm from "./product-form";
+import useStore from "@/hook/use-store";
+
+
 
 type ToolbarProps<TData> = {
   table: Table<TData>;
@@ -44,7 +47,10 @@ const options = [
 ];
 
 const ProductsTableToolbar = <TData,>({ table }: ToolbarProps<TData>) => {
+
+  const setProductForm = useStore((state) => state.setProductForm);
   const isFiltered = table.getState().columnFilters.length > 0;
+  
   return (
     <div className="flex items-center justify-between gap-2">
       <Input
@@ -104,15 +110,7 @@ const ProductsTableToolbar = <TData,>({ table }: ToolbarProps<TData>) => {
           </Button>
         )}
       </div>
-      <ProductForm
-        formBtnTitle="Add Product"
-        btn={
-          <Button size="sm" className="h-8 ">
-            <PackagePlus className="mr-2 h-4 w-4" />
-            Add Product
-          </Button>
-        }
-      />
+      <Button onClick={setProductForm}>addd project</Button>
     </div>
   );
 };

@@ -35,7 +35,7 @@ const customerSelect = async (props: CustomerSelectProp) => {
       <main className="flex-grow p-4">
         <div className="mb-4 flex items-center">
           <div className="mr-4 w-64">
-            <div className="mb-32 mt-16 flex items-center justify-start">
+            <div className="mb-10 mt-8 flex items-center justify-start">
               <div className="mx-auto flex max-w-md items-center space-x-4">
                 <div>
                   <Select>

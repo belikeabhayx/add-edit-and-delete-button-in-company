@@ -5,6 +5,8 @@ import { cookies } from "next/headers";
 
 import { TRPCReactProvider } from "@/trpc/react";
 import { Toaster } from "sonner";
+import AddCustomerForm from "@/components/admin/form/add-customer";
+import AddProductForm from "@/components/admin/form/add-product";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,6 +30,8 @@ export default function RootLayout({
         <TRPCReactProvider cookies={cookies().toString()}>
         <Toaster richColors position="bottom-center" />
           {children}
+          <AddCustomerForm />
+				<AddProductForm />
         </TRPCReactProvider>
       </body>
     </html>
