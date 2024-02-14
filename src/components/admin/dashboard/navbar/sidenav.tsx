@@ -38,7 +38,7 @@ const SideNavbar: React.FC = () => {
         {isHovered ? (
           <>
             <FaCogs className="mr-2" />
-            Services
+            Invoices
           </>
         ) : (
           <FaCogs />
@@ -48,7 +48,7 @@ const SideNavbar: React.FC = () => {
         {isHovered ? (
           <>
             <FaEnvelope className="mr-2" />
-            Contact
+            Products
           </>
         ) : (
           <FaEnvelope />

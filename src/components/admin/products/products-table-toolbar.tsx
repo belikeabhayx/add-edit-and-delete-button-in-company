@@ -114,7 +114,7 @@ const ProductsTableToolbar = <TData,>({ table }: ToolbarProps<TData>) => {
       <Button>
         <Link href="/invoice" >Create Invoice</Link>
       </Button>
-      <Button onClick={setProductForm}>Add Product</Button>
+      {/* <Button onClick={setProductForm}>Add Product</Button> */}
     </div>
   );
 };

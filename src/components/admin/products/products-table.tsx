@@ -19,6 +19,9 @@ import {
   getFacetedUniqueValues,
   getFacetedRowModel,
 } from "@tanstack/react-table";
+import { Button } from "@/components/ui/button";
+import useStore from "@/hook/use-store";
+import Image from "next/image";
 
 type ProductsTableProps = {
   columns: ColumnDef<Product>[];
@@ -30,6 +33,7 @@ const ProductsTable = ({ columns, initialData }: ProductsTableProps) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const setProductForm = useStore((state) => state.setProductForm);
 
   const table = useReactTable({
     data,
@@ -61,9 +65,23 @@ const ProductsTable = ({ columns, initialData }: ProductsTableProps) => {
   });
 
   return (
+
     <div className="space-y-4">
+      <div className=" mt-10 items-center justify-center">
+        {/* icon and heading */}
+        <div className="flex  mb-4">
+          <Image
+            src="/items.svg"
+            alt=""
+            width={50}
+            height={50}
+          />
+          <div className="font-bold text-3xl mt-2 ml-2">Items</div>
+        </div>
+      </div>
       <ProductsTableToolbar table={table} />
       <DataTable table={table} columns={columns} />
+      <Button onClick={setProductForm} className="w-full">Add Product</Button>
       <DataTablePagination table={table} />
     </div>
   );
