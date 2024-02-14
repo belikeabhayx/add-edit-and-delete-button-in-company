@@ -1,17 +1,18 @@
-"use client"
-import React, { useState } from 'react';
-import { FaHome, FaInfoCircle, FaCogs, FaEnvelope } from 'react-icons/fa';
+"use client";
+import Link from "next/link";
+import React, { useState } from "react";
+import { FaHome, FaInfoCircle, FaCogs, FaEnvelope } from "react-icons/fa";
 
 const SideNavbar: React.FC = () => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <div
-      className="fixed top-0 left-0 h-[80vh] w-16 bg-gray-800 transition-width duration-300 ease-in-out hover:w-64 flex flex-col justify-center rounded-r-2xl mt-16"
+      className="transition-width fixed left-0 top-0 mt-16 flex h-[80vh] w-16 flex-col justify-center rounded-r-2xl bg-gray-800 duration-300 ease-in-out hover:w-64"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="text-white p-4 cursor-pointer hover:bg-gray-700 flex items-center justify-center">
+      <div className="flex cursor-pointer items-center justify-center p-4 text-white hover:bg-gray-700">
         {isHovered ? (
           <>
             <FaHome className="mr-2" />
@@ -21,17 +22,19 @@ const SideNavbar: React.FC = () => {
           <FaHome />
         )}
       </div>
-      <div className="text-white p-4 cursor-pointer hover:bg-gray-700 flex items-center justify-center">
-        {isHovered ? (
-          <>
-            <FaInfoCircle className="mr-2" />
-            About
-          </>
-        ) : (
-          <FaInfoCircle />
-        )}
-      </div>
-      <div className="text-white p-4 cursor-pointer hover:bg-gray-700 flex items-center justify-center">
+      <Link href="/customer">
+        <div className="flex cursor-pointer items-center justify-center p-4 text-white hover:bg-gray-700">
+          {isHovered ? (
+            <>
+              <FaInfoCircle className="mr-2" />
+              Customer
+            </>
+          ) : (
+            <FaInfoCircle />
+          )}
+        </div>
+      </Link>
+      <div className="flex cursor-pointer items-center justify-center p-4 text-white hover:bg-gray-700">
         {isHovered ? (
           <>
             <FaCogs className="mr-2" />
@@ -41,7 +44,7 @@ const SideNavbar: React.FC = () => {
           <FaCogs />
         )}
       </div>
-      <div className="text-white p-4 cursor-pointer hover:bg-gray-700 flex items-center justify-center">
+      <div className="flex cursor-pointer items-center justify-center p-4 text-white hover:bg-gray-700">
         {isHovered ? (
           <>
             <FaEnvelope className="mr-2" />

@@ -7,7 +7,7 @@ import {
   insertCustomerSchema,
   selectCompanySchema,
 } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 
 const id = selectCompanySchema.pick({ id: true });
@@ -18,12 +18,17 @@ export const customerRouter = createTRPCRouter({
     .input(insertCustomerSchema)
     .mutation(async ({ ctx, input }) => {
       await ctx.db.insert(customer).values({
-        title: input.title,
-        Pno: input.Pno,
+        legalname: input.legalname,  
+        businessname: input.businessname,
+        gstin: input.gstin,
+        pno: input.pno,  
+        email: input.email,
       });
     }),
-  read: protectedProcedure.query(async ({ ctx, input }) => {
-    return await ctx.db.query.customer.findMany();
+  read: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.db.query.customer.findMany({
+      orderBy: [desc(customer.createdAt)],
+    });
   }),
   createOrUpdate: protectedProcedure
     .input(insertCustomerSchema)
@@ -34,14 +39,14 @@ export const customerRouter = createTRPCRouter({
         await ctx.db.insert(customer).values(input);
       }
     }),
-//   update: protectedProcedure
-//     .input(insertCustomerSchema)
-//     .mutation(async ({ ctx, input }) => {
-//       await ctx.db.update(company).set(input).where(eq(company.id, input.id));
-//     }),
-//   delete: protectedProcedure
-//     .input(id)
-//     .mutation(async ({ ctx, input }) => {
-//       await ctx.db.delete(company).where(eq(company.id, input.id));
-//     }),
+  // update: protectedProcedure
+  //   .input(insertCustomerSchema)
+  //   .mutation(async ({ ctx, input }) => {
+  //     await ctx.db.update(customer).set(input).where(eq(customer.id, input.id));
+  //   }),
+  // delete: protectedProcedure
+  //   .input(id)
+  //   .mutation(async ({ ctx, input }) => {
+  //     await ctx.db.delete(customer).where(eq(customer.id, input.id));
+  //   }),
 });

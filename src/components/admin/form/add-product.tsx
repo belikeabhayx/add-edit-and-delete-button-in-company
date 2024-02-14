@@ -32,11 +32,10 @@ type Props = {
   values?: z.infer<typeof insertProductSchema>;
 };
 
-const AddProductForm = ({ btn, formBtnTitle, values }: Props) => {
+const AddProductForm = ({ values }: Props) => {
   const isProductFormOpen = useStore((state) => state.isProductFormOpen);
   const setProductForm = useStore((state) => state.setProductForm);
 
-  const setCustomerForm = useStore((state) => state.setCustomerForm);
   const [open, setOpen] = React.useState(false);
   const form = useForm<z.infer<typeof insertProductSchema>>({
     resolver: zodResolver(insertProductSchema),
@@ -86,152 +85,157 @@ const AddProductForm = ({ btn, formBtnTitle, values }: Props) => {
   ]);
 
   return (
-    <Dialog open={isProductFormOpen} onOpenChange={setProductForm}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Product Form</DialogTitle>
-          <DialogDescription>
-            <div className="flex-1 overflow-auto">
-              <Form {...form}>
-                <form className="grid grid-cols-4 gap-4">
-                  {/* Name */}
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem className="col-span-4">
-                        <FormLabel>Name</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+    <div className="mx-auto w-[500px] p-4">
+      <Dialog open={isProductFormOpen} onOpenChange={setProductForm}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Product Form</DialogTitle>
+            <DialogDescription>
+              <div className="flex-1 overflow-auto">
+                <Form {...form}>
+                  <form className="grid grid-cols-4 gap-4">
+                    {/* Name */}
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem className="col-span-4">
+                          <FormLabel className="font-semibold">Name</FormLabel>
+                          <FormControl>
+                            <Input
+                              className="focus:ring-primary-500 focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage className="font-medium text-red-500" />
+                        </FormItem>
+                      )}
+                    />
 
-                  {/* HSN */}
-                  <FormField
-                    control={form.control}
-                    name="hsn"
-                    render={({ field }) => (
-                      <FormItem className="col-span-4">
-                        <FormLabel>HSN</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                    {/* HSN */}
+                    <FormField
+                      control={form.control}
+                      name="hsn"
+                      render={({ field }) => (
+                        <FormItem className="col-span-4">
+                          <FormLabel>HSN</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  {/* Quantity */}
-                  <FormField
-                    control={form.control}
-                    name="quantity"
-                    render={({ field }) => (
-                      <FormItem className="col-span-4">
-                        <FormLabel>Quantity</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                    {/* Quantity */}
+                    <FormField
+                      control={form.control}
+                      name="quantity"
+                      render={({ field }) => (
+                        <FormItem className="col-span-4">
+                          <FormLabel>Quantity</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  {/* price */}
-                  <FormField
-                    control={form.control}
-                    name="price"
-                    render={({ field }) => (
-                      <FormItem className="col-span-2">
-                        <FormLabel>Price</FormLabel>
-                        <FormControl>
-                          <Input type="number" {...field} min={0} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                    {/* price */}
+                    <FormField
+                      control={form.control}
+                      name="price"
+                      render={({ field }) => (
+                        <FormItem className="col-span-2">
+                          <FormLabel>Price</FormLabel>
+                          <FormControl>
+                            <Input type="number" {...field} min={0} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  {/* CGST */}
-                  <FormField
-                    control={form.control}
-                    name="cgst"
-                    render={({ field }) => (
-                      <FormItem className="col-span-2">
-                        <FormLabel>CGST (%)</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            {...field}
-                            min={0}
-                            max={100}
-                            value={field.value ?? 0}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                    {/* CGST */}
+                    <FormField
+                      control={form.control}
+                      name="cgst"
+                      render={({ field }) => (
+                        <FormItem className="col-span-2">
+                          <FormLabel>CGST (%)</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              {...field}
+                              min={0}
+                              max={100}
+                              value={field.value ?? 0}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  {/* GST */}
-                  <FormField
-                    control={form.control}
-                    name="gst"
-                    render={({ field }) => (
-                      <FormItem className="col-span-2">
-                        <FormLabel>GST (%)</FormLabel>
-                        <FormControl>
-                          <Input type="number" {...field} min={0} max={100} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                    {/* GST */}
+                    <FormField
+                      control={form.control}
+                      name="gst"
+                      render={({ field }) => (
+                        <FormItem className="col-span-2">
+                          <FormLabel>GST (%)</FormLabel>
+                          <FormControl>
+                            <Input type="number" {...field} min={0} max={100} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  {/* Taxable Amount */}
-                  <FormField
-                    control={form.control}
-                    name="taxableamount"
-                    render={({ field }) => (
-                      <FormItem className="col-span-2">
-                        <FormLabel>Taxable Amount</FormLabel>
-                        <FormControl>
-                          <Input type="number" {...field} readOnly />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                    {/* Taxable Amount */}
+                    <FormField
+                      control={form.control}
+                      name="taxableamount"
+                      render={({ field }) => (
+                        <FormItem className="col-span-2">
+                          <FormLabel>Taxable Amount</FormLabel>
+                          <FormControl>
+                            <Input type="number" {...field} readOnly />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  {/* Amount */}
-                  <FormField
-                    control={form.control}
-                    name="amount"
-                    render={({ field }) => (
-                      <FormItem className="col-span-2">
-                        <FormLabel>Amount</FormLabel>
-                        <FormControl>
-                          <Input type="number" {...field} readOnly />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                
-                </form>
-                <Button
+                    {/* Amount */}
+                    <FormField
+                      control={form.control}
+                      name="amount"
+                      render={({ field }) => (
+                        <FormItem className="col-span-2">
+                          <FormLabel>Amount</FormLabel>
+                          <FormControl>
+                            <Input type="number" {...field} readOnly />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </form>
+                  <Button
+                  className="mt-6 ml-36"
                   onClick={form.handleSubmit(onSubmit)}
                   disabled={form.formState.isSubmitting ? true : false}>
                   Add Product
                 </Button>
-              </Form>
-            </div>
-          </DialogDescription>
-        </DialogHeader>
-      </DialogContent>
-    </Dialog>
+                </Form>
+              </div>
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 };
 

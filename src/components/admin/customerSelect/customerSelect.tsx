@@ -16,11 +16,11 @@ import { z } from "zod";
 import { insertCustomerSchema } from "@/server/db/schema";
 import { api } from "@/trpc/server";
 
-type CustomerSelectProp = {
-  initialData: z.infer<typeof insertCustomerSchema>[];
-};
+// type CustomerSelectProp = {
+//   initialData: z.infer<typeof insertCustomerSchema>[];
+// };
 
-const customerSelect = async (props: CustomerSelectProp) => {
+const CustomerSelect = async () => {
   const data = await api.customer.read.query();
   const companies = await api.company.read.query();
   const company = companies[0]; // Assuming the array contains one company object
@@ -75,4 +75,4 @@ const customerSelect = async (props: CustomerSelectProp) => {
   );
 };
 
-export default customerSelect;
+export default CustomerSelect;

@@ -76,7 +76,7 @@ const AddCustomerForm = ({ values }: Props) => {
                   {/* Legal Name */}
                   <FormField
                     control={form.control}
-                    name="title"
+                    name="legalname"
                     render={({ field }) => (
                       <FormItem className="col-span-4">
                         <FormLabel>Legal Name</FormLabel>
@@ -88,13 +88,58 @@ const AddCustomerForm = ({ values }: Props) => {
                     )}
                   />
 
+                  {/* Business Name */}
+                  <FormField
+                    control={form.control}
+                    name="businessname"
+                    render={({ field }) => (
+                      <FormItem className="col-span-4">
+                        <FormLabel>Business Name</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* GSTIN */}
+                  <FormField
+                    control={form.control}
+                    name="gstin"
+                    render={({ field }) => (
+                      <FormItem className="col-span-4">
+                        <FormLabel>GSTIN</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
                   {/* phone No. */}
                   <FormField
                     control={form.control}
-                    name="Pno"
+                    name="pno"
                     render={({ field }) => (
                       <FormItem className="col-span-4">
                         <FormLabel>Phone No.</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Email Address */}
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem className="col-span-4">
+                        <FormLabel>Email Address</FormLabel>
                         <FormControl>
                           <Input {...field} />
                         </FormControl>

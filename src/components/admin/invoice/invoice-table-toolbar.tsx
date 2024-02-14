@@ -1,5 +1,4 @@
 "use client";
-
 import { X, Settings2, PackagePlus } from "lucide-react";
 import { Table } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
@@ -14,7 +13,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { FacetedFilter } from "@/components/ui/data-table/data-table-faceted-filter";
-import ProductForm from "./product-form";
 import useStore from "@/hook/use-store";
 import Link from "next/link";
 
@@ -49,8 +47,8 @@ const options = [
 
 const ProductsTableToolbar = <TData,>({ table }: ToolbarProps<TData>) => {
 
-  const setProductForm = useStore((state) => state.setProductForm);
   const isFiltered = table.getState().columnFilters.length > 0;
+  const setCustomerForm = useStore((state) => state.setCustomerForm);
   
   return (
     <div className="flex items-center justify-between gap-2">
@@ -111,10 +109,10 @@ const ProductsTableToolbar = <TData,>({ table }: ToolbarProps<TData>) => {
           </Button>
         )}
       </div>
+      <Button onClick={setCustomerForm}>Add Customer</Button>
       <Button>
-        <Link href="/invoice" >Create Invoice</Link>
+        <Link href="/invoice">Print Invoice</Link>
       </Button>
-      <Button onClick={setProductForm}>Add Product</Button>
     </div>
   );
 };
