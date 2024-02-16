@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
-import { DataTable } from "@/components/ui/data-table/data-table";
+
 import { api } from "@/trpc/react";
 import ProductsTableToolbar from "./products-table-toolbar";
 import { Product } from "./columns";
@@ -22,6 +22,7 @@ import {
 import { Button } from "@/components/ui/button";
 import useStore from "@/hook/use-store";
 import Image from "next/image";
+import { DataTable } from "@/components/ui/data-table/data-table";
 
 type ProductsTableProps = {
   columns: ColumnDef<Product>[];

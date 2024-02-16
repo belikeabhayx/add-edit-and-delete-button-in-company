@@ -26,15 +26,13 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-
 type Props = {
-	btn: React.ReactNode;
-	formBtnTitle: string;
-	values?: z.infer<typeof insertCustomerSchema>;
-  };
+  btn: React.ReactNode;
+  formBtnTitle: string;
+  values?: z.infer<typeof insertCustomerSchema>;
+};
 
-const AddCustomerForm = ({ values }: Props) => {
-
+const AddCustomerForm = ({ btn, formBtnTitle, values }: Props) => {
   const [open, setOpen] = React.useState(false);
   const isCustomerFormOpen = useStore((state) => state.isCustomerFormOpen);
   const setCustomerForm = useStore((state) => state.setCustomerForm);
@@ -47,9 +45,12 @@ const AddCustomerForm = ({ values }: Props) => {
     await createOrUpdateProduct.mutateAsync(values);
   };
 
+  const utils = api.useUtils();
+
   const createOrUpdateProduct = api.customer.createOrUpdate.useMutation({
     onSuccess: () => {
       setOpen(false);
+      utils.customer.invalidate();
       form.reset();
       toast.success(values?.id ? "Product updated!" : "Product created!");
     },
@@ -58,7 +59,6 @@ const AddCustomerForm = ({ values }: Props) => {
       toast.error("Something went wrong!");
     },
   });
-
 
   return (
     <Dialog open={isCustomerFormOpen} onOpenChange={setCustomerForm}>
@@ -149,12 +149,12 @@ const AddCustomerForm = ({ values }: Props) => {
                   />
                 </form>
               </Form>
-			  <Button
-              onClick={form.handleSubmit(onSubmit)}
-              disabled={form.formState.isSubmitting ? true : false}
-            >
-              Add Customer
-            </Button>
+              <Button className="ml-44 mt-4"
+                onClick={form.handleSubmit(onSubmit)}
+                disabled={form.formState.isSubmitting ? true : false}
+              >
+               Add Customer
+              </Button>
             </div>
           </DialogDescription>
         </DialogHeader>

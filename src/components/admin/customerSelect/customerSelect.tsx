@@ -47,8 +47,8 @@ const CustomerSelect = async () => {
                         <SelectLabel>Customer</SelectLabel>
                         {data &&
                           data.map((item) => (
-                            <SelectItem key={item.title} value={item.title}>
-                              {item.title}-{item.Pno}
+                            <SelectItem key={item.id} value={item.legalname}>
+                              {item.legalname}-{item.pno}
                             </SelectItem>
                           ))}
                       </SelectGroup>

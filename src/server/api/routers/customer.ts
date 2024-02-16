@@ -6,11 +6,12 @@ import {
   customer,
   insertCustomerSchema,
   selectCompanySchema,
+  selectCustomerSchema,
 } from "@/server/db/schema";
 import { desc, eq } from "drizzle-orm";
 
 
-const id = selectCompanySchema.pick({ id: true });
+const id = selectCustomerSchema.pick({ id: true });
 // yeh add krne se last line ka error kaise gayab hogya
 
 export const customerRouter = createTRPCRouter({
@@ -44,9 +45,9 @@ export const customerRouter = createTRPCRouter({
   //   .mutation(async ({ ctx, input }) => {
   //     await ctx.db.update(customer).set(input).where(eq(customer.id, input.id));
   //   }),
-  // delete: protectedProcedure
-  //   .input(id)
-  //   .mutation(async ({ ctx, input }) => {
-  //     await ctx.db.delete(customer).where(eq(customer.id, input.id));
-  //   }),
+  delete: protectedProcedure
+    .input(id)
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.delete(customer).where(eq(customer.id, input.id));
+    }),
 });

@@ -131,5 +131,3 @@ export const columns: ColumnDef<Product>[] = [
     },
   },
 ];
-
-// ...ProductForm component

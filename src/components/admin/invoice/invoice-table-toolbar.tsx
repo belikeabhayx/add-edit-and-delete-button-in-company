@@ -49,11 +49,12 @@ const ProductsTableToolbar = <TData,>({ table }: ToolbarProps<TData>) => {
 
   const isFiltered = table.getState().columnFilters.length > 0;
   const setCustomerForm = useStore((state) => state.setCustomerForm);
+  const setInvoiceForm  = useStore((state) => state.setInvoiceForm);
   
   return (
     <div className="flex items-center justify-between gap-2">
       <Input
-        placeholder="Search for a product..."
+        placeholder="Search for a invoice..."
         value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
         onChange={(event) =>
           table.getColumn("title")?.setFilterValue(event.target.value)
@@ -109,9 +110,10 @@ const ProductsTableToolbar = <TData,>({ table }: ToolbarProps<TData>) => {
           </Button>
         )}
       </div>
+      <Button onClick={setInvoiceForm}>Add Invoice</Button>
       <Button onClick={setCustomerForm}>Add Customer</Button>
       <Button>
-        <Link href="/invoice">Print Invoice</Link>
+        <Link href="/product">Product Page</Link>
       </Button>
     </div>
   );

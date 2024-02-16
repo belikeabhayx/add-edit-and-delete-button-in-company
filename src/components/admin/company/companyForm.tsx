@@ -42,9 +42,12 @@ const CompanyForm = ({ btn, formBtnTitle, values }: Props) => {
     await createOrUpdateCompany.mutateAsync(values);
   };
 
+  const utils = api.useUtils();
+
   const createOrUpdateCompany = api.company.createOrUpdate.useMutation({
     onSuccess: () => {
       setOpen(false);
+      utils.company.invalidate();
       form.reset();
       toast.success(values?.id ? "Company updated!" : "Company created!");
     },

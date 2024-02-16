@@ -19,6 +19,7 @@ import {
   getFacetedUniqueValues,
   getFacetedRowModel,
 } from "@tanstack/react-table";
+import { TbFileInvoice } from "react-icons/tb";
 
 type ProductsTableProps = {
   columns: ColumnDef<Product>[];
@@ -26,7 +27,7 @@ type ProductsTableProps = {
 };
 
 const ProductsTable = ({ columns, initialData }: ProductsTableProps) => {
-  const { data } = api.product.read.useQuery(undefined, { initialData });
+  const { data } = api.invoice.read.useQuery(undefined, { initialData });
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -62,6 +63,13 @@ const ProductsTable = ({ columns, initialData }: ProductsTableProps) => {
 
   return (
     <div className="space-y-4">
+      <div className=" mt-10 items-center justify-center">
+        {/* icon and heading */}
+        <div className="flex  mb-4">
+          <TbFileInvoice className="text-5xl" />
+          <div className="font-bold text-3xl mt-2 ml-2">Invoices</div>
+        </div>
+      </div>
       <ProductsTableToolbar table={table} />
       <DataTable table={table} columns={columns} />
       <DataTablePagination table={table} />

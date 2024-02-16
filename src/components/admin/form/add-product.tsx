@@ -26,6 +26,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
+
 type Props = {
   btn: React.ReactNode;
   formBtnTitle: string;
@@ -224,11 +225,12 @@ const AddProductForm = ({ values }: Props) => {
                     />
                   </form>
                   <Button
-                  className="mt-6 ml-36"
-                  onClick={form.handleSubmit(onSubmit)}
-                  disabled={form.formState.isSubmitting ? true : false}>
-                  Add Product
-                </Button>
+                    className="ml-36 mt-6"
+                    onClick={form.handleSubmit(onSubmit)}
+                    disabled={form.formState.isSubmitting ? true : false}
+                  >
+                    Add Product
+                  </Button>
                 </Form>
               </div>
             </DialogDescription>

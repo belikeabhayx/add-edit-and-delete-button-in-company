@@ -4,14 +4,22 @@ import { devtools } from "zustand/middleware";
 type StoreState = {
 	isCustomerFormOpen: boolean;
 	isProductFormOpen: boolean;
+	isInvoiceFormOpen: boolean;
 	setCustomerForm: () => void;
 	setProductForm: () => void;
+	setInvoiceForm: () => void;
 };
 
 const useStore = create<StoreState>()(
 	devtools((set) => ({
 		isCustomerFormOpen: false,
 		isProductFormOpen: false,
+		isInvoiceFormOpen: false,
+		setInvoiceForm: () =>
+			set((state) => ({
+				...state,
+				isInvoiceFormOpen: !state.isInvoiceFormOpen,
+			})),
 		setCustomerForm: () =>
 			set((state) => ({
 				...state,

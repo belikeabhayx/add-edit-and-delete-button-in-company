@@ -1,22 +1,18 @@
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   timestamp,
   pgTable,
   text,
-  primaryKey,
-  integer,
-  serial,
-  index,
-  varchar,
   doublePrecision,
   pgEnum,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { users } from "./users";
 
 export const paymentStatus = pgEnum("paymentStatus", ["Paid", "Unpaid"]);
 
-export const invoices = pgTable("invoices", {
-  invoice: text("invoice")
+export const invoice = pgTable("invoice", {
+  id: text("id")
     .default(sql`gen_random_uuid()`)
     .notNull()
     .primaryKey(),
@@ -28,7 +24,12 @@ export const invoices = pgTable("invoices", {
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
 });
 
-export const selectInvoiceSchema = createSelectSchema(invoices);
-export const insertInvoiceSchema = createInsertSchema(invoices);
+export const invoiceRelations = relations(invoice, ({ many }) => ({
+  user: many(users),
+}));
+
+
+export const selectInvoiceSchema = createSelectSchema(invoice);
+export const insertInvoiceSchema = createInsertSchema(invoice);
 
 // drizzle-orm

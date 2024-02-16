@@ -19,6 +19,8 @@ import {
   getFacetedUniqueValues,
   getFacetedRowModel,
 } from "@tanstack/react-table";
+import useStore from "@/hook/use-store";
+import { Button } from "@/components/ui/button";
 
 type ProductsTableProps = {
   columns: ColumnDef<Product>[];
@@ -30,6 +32,7 @@ const ProductsTable = ({ columns, initialData }: ProductsTableProps) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const setCustomerForm = useStore((state) => state.setCustomerForm);
 
   const table = useReactTable({
     data,
@@ -64,6 +67,7 @@ const ProductsTable = ({ columns, initialData }: ProductsTableProps) => {
     <div className="space-y-4">
       <ProductsTableToolbar table={table} />
       <DataTable table={table} columns={columns} />
+      <Button onClick={setCustomerForm} className="w-full">Add Customer</Button>
       <DataTablePagination table={table} />
     </div>
   );

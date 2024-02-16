@@ -44,16 +44,18 @@ const SideNavbar: React.FC = () => {
           <FaCogs />
         )}
       </div>
-      <div className="flex cursor-pointer items-center justify-center p-4 text-white hover:bg-gray-700">
-        {isHovered ? (
-          <>
-            <FaEnvelope className="mr-2" />
-            Products
-          </>
-        ) : (
-          <FaEnvelope />
-        )}
-      </div>
+      <Link href="/product">
+        <div className="flex cursor-pointer items-center justify-center p-4 text-white hover:bg-gray-700">
+          {isHovered ? (
+            <>
+              <FaEnvelope className="mr-2" />
+              Products
+            </>
+          ) : (
+            <FaEnvelope />
+          )}
+        </div>
+      </Link>
     </div>
   );
 };

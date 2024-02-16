@@ -6,11 +6,13 @@ import * as z from "zod";
 import React from "react";
 import { toast } from "sonner";
 import { api } from "@/trpc/react";
-import { insertCustomerSchema, selectInvoiceSchema } from "@/server/db/schema";
+import { selectCustomerSchema } from "@/server/db/schema";
 import { ColumnHeader } from "@/components/ui/data-table/data-table-column-header";
 import AddCustomerForm from "../form/add-customer";
+import useStore from "@/hook/use-store";
 
-export type Product = z.infer<typeof insertCustomerSchema>;
+export type Product = z.infer<typeof selectCustomerSchema>;
+
 
 export const columns: ColumnDef<Product>[] = [
   // id
@@ -67,9 +69,9 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({ row }) => {
       const utils = api.useUtils();
 
-      const deleteProduct = api.product.delete.useMutation({
+      const deleteProduct = api.customer.delete.useMutation({
         onSuccess: () => {
-          utils.product.invalidate();
+          utils.customer.invalidate();
           toast.success("Product deleted!");
         },
         onError: () => {
@@ -80,6 +82,10 @@ export const columns: ColumnDef<Product>[] = [
       const handleClick = (id: string) => {
         deleteProduct.mutate({ id });
       };
+
+      const setCustomerForm = useStore((state) => state.setCustomerForm);
+      const isCustomerFormOpen = useStore((state) => state.isCustomerFormOpen);
+
       return (
         <div className="flex">
           <AddCustomerForm
@@ -98,7 +104,7 @@ export const columns: ColumnDef<Product>[] = [
             variant="outline"
             className="group h-7 rounded-l-none border-l-0 p-2"
             disabled={deleteProduct.isLoading}
-            onClick={() => row.original.id && handleClick(row.original.id)}
+            onClick={() => handleClick(row.original.id)}
           >
             {deleteProduct.isLoading ? (
               <Loader2 className="h-4 w-4 animate-spin" />

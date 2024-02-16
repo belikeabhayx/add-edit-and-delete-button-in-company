@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
-
 import {
   Dialog,
   DialogContent,
@@ -36,6 +35,7 @@ const MainPage = () => {
     onSuccess: (data) => {
       console.log("Mutation succeeded:", data);
       router.refresh();
+      utils.company.invalidate();
       setInputName("");
       setBusinessname("");
       setGSTIN("");
@@ -75,7 +75,7 @@ const MainPage = () => {
 
   const deleteProduct = api.company.delete.useMutation({
     onSuccess: () => {
-      utils.product.invalidate();
+      utils.company.invalidate();
       toast.success("Product deleted!");
     },
     onError: () => {

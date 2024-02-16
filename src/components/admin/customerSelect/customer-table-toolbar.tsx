@@ -13,7 +13,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { FacetedFilter } from "@/components/ui/data-table/data-table-faceted-filter";
-import useStore from "@/hook/use-store";
 import Link from "next/link";
 
 
@@ -48,15 +47,14 @@ const options = [
 const ProductsTableToolbar = <TData,>({ table }: ToolbarProps<TData>) => {
 
   const isFiltered = table.getState().columnFilters.length > 0;
-  const setCustomerForm = useStore((state) => state.setCustomerForm);
   
   return (
     <div className="flex items-center justify-between gap-2">
       <Input
-        placeholder="Search for a product..."
-        value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+        placeholder="Search for a customer..."
+        value={(table.getColumn("title" || "legalname")?.getFilterValue() as string) ?? ""}
         onChange={(event) =>
-          table.getColumn("title")?.setFilterValue(event.target.value)
+          table.getColumn("title" || "legalname")?.setFilterValue(event.target.value)
         }
         className="h-8 w-[150px] lg:w-[250px]"
       />
@@ -109,9 +107,9 @@ const ProductsTableToolbar = <TData,>({ table }: ToolbarProps<TData>) => {
           </Button>
         )}
       </div>
-      <Button onClick={setCustomerForm}>Add Customer</Button>
+      {/* <Button onClick={setCustomerForm}>Add Customer</Button> */}
       <Button>
-        <Link href="/invoice">Print Invoice</Link>
+        <Link href="/invoice">Invoice Page</Link>
       </Button>
     </div>
   );

@@ -21,6 +21,7 @@ import React from "react";
 type FilterProps<TData, TValue> = {
   column?: Column<TData, TValue>;
   title?: string;
+  legalname?: string;
   options: {
     value: string;
     label: React.ReactNode;
@@ -28,7 +29,7 @@ type FilterProps<TData, TValue> = {
 };
 
 const FacetedFilter = <TData, TValue>(props: FilterProps<TData, TValue>) => {
-  const { column, title, options } = props;
+  const { column, title, options, legalname } = props;
   const facets = column?.getFacetedUniqueValues();
   const selectedValues = new Set(column?.getFilterValue() as string[]);
 
@@ -37,7 +38,7 @@ const FacetedFilter = <TData, TValue>(props: FilterProps<TData, TValue>) => {
       <PopoverTrigger asChild>
         <Button variant="outline" size="sm" className="h-8 border-dashed">
           <PlusSquare className="mr-2 h-4 w-4" />
-          {title}
+          {title}||{legalname}
           {selectedValues?.size > 0 && (
             <>
               <Separator orientation="vertical" className="mx-2 h-4" />

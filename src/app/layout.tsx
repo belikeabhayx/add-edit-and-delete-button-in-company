@@ -7,6 +7,7 @@ import { TRPCReactProvider } from "@/trpc/react";
 import { Toaster } from "sonner";
 import AddCustomerForm from "@/components/admin/form/add-customer";
 import AddProductForm from "@/components/admin/form/add-product";
+import AddInvoice from "@/components/admin/form/add-invoice";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,10 +29,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
         <TRPCReactProvider cookies={cookies().toString()}>
-        <Toaster richColors position="bottom-center" />
+          <Toaster richColors position="bottom-center" />
           {children}
           <AddCustomerForm />
-				<AddProductForm />
+          <AddProductForm />
+          <AddInvoice />
         </TRPCReactProvider>
       </body>
     </html>

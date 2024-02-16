@@ -14,12 +14,12 @@ export type Product = z.infer<typeof selectInvoiceSchema>;
 export const columns: ColumnDef<Product>[] = [
   // Invoice
   {
-    accessorKey: "invoice",
+    accessorKey: "id",
     header: "Invoice No.",
     enableSorting: false,
     enableHiding: false,
     cell: ({ getValue }) => (
-      <p className="w-24 truncate">{getValue<Product["invoice"]>()}</p>
+      <p className="w-24 truncate">{getValue<Product["id"]>()}</p>
     ),
   },
   // Customer Name

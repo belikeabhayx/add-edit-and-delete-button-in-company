@@ -1,15 +1,16 @@
-import { columns } from "@/components/admin/products/columns";
+
 import { Button } from "@/components/ui/button";
 import { auth } from "@/server/auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
 import NoSSR from "@/components/no-ssr";
-import ProductsTable from "@/components/admin/products/products-table";
 import { api } from "@/trpc/server";
-import CustomerSelect from "@/components/admin/customerSelect/customerSelect";
 import SideNavbar from "@/components/admin/dashboard/navbar/sidenav";
+import CustomerSelect from "@/components/admin/customerSelect/customerSelect";
 import Summary from "@/components/admin/summary/summary";
+import { columns } from "@/components/admin/invoice/columns";
+import ProductsTable from "@/components/admin/invoice/invoice-table";
 
 type Props = {
   params: {
@@ -24,6 +25,7 @@ const NotebookPage = async ({ params: { compId } }: Props) => {
   }
   const products = await api.product.read.query();
   const customer = await api.customer.read.query();
+  const invoice = await api.invoice.read.query();
 
   return (
     <div className="grainy min-h-screen p-8">
@@ -44,14 +46,11 @@ const NotebookPage = async ({ params: { compId } }: Props) => {
 
         <div className="h-4"></div>
         <div className="w-full ml-10 rounded-lg border border-stone-200 px-16 py-8 shadow-xl">
-
-          {/* here i import my product table */}
-          {/* <CustomerSelect initialData={customer}/> */}
-        <NoSSR>
-          
+        {/* <NoSSR>
         <ProductsTable columns={columns} initialData={products} />
         </NoSSR>
-        <Summary/>
+        <Summary/> */}
+        <ProductsTable columns={columns} initialData={invoice} />
         </div>
       </div>
     </div>
