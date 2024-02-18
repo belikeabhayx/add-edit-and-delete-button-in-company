@@ -13,7 +13,6 @@ export const invoiceRouter = createTRPCRouter({
         customername: input.customername,
         invoiceamount: input.invoiceamount,
         balancedue: input.balancedue,
-        paymentstatus: input.paymentstatus,
         status: input.status,
       });
     }),

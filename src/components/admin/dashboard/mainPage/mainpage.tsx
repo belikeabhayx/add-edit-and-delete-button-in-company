@@ -110,7 +110,7 @@ const MainPage = () => {
               data.map((square, index) => (
                 <div className="ml-10 flex flex-row items-center justify-center rounded-lg border-2 border-dashed border-blue-950 p-4 transition hover:-translate-y-1 hover:shadow-xl sm:flex-col w-64 h-52 relative">
                   <div className="p-4" key={index}>
-                    <Link href={`/company/${square.id}`}>
+                    <Link href={`/company/${square.businessname}`}>
                       <h3 className="text-xl font-semibold text-gray-900">
                        Company Name: {square.businessname}
                       </h3>

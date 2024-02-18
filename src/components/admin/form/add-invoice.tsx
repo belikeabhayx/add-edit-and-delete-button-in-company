@@ -45,19 +45,13 @@ const AddInvoiceForm = ({ values }: Props) => {
   const isInvoiceFormOpen = useStore((state) => state.isInvoiceFormOpen);
   const setInvoiceForm = useStore((state) => state.setInvoiceForm);
 
-  // const data = api.customer.read.useQuery();
-  // const product = api.product.read.useQuery();
-  // const total = Array.isArray(product.data)
-  //   ? product.data.reduce((sum, item) => sum + item.amount, 0)
-  //   : 0;
+  const data = api.product.read.useQuery();
 
   const [open, setOpen] = React.useState(false);
   const form = useForm<z.infer<typeof insertInvoiceSchema>>({
     resolver: zodResolver(insertInvoiceSchema),
     defaultValues: {
         ...values,
-        // invoiceamount: total,
-        // balancedue: total, // Set the default value for the "Invoice Amount" field
       },
   });
 

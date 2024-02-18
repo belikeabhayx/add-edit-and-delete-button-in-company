@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
-
 import { api } from "@/trpc/react";
 import ProductsTableToolbar from "./products-table-toolbar";
 import { Product } from "./columns";
@@ -20,9 +19,9 @@ import {
   getFacetedRowModel,
 } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import useStore from "@/hook/use-store";
 import Image from "next/image";
 import { DataTable } from "@/components/ui/data-table/data-table";
+import useStore from "@/hook/use-store";
 
 type ProductsTableProps = {
   columns: ColumnDef<Product>[];
@@ -30,17 +29,11 @@ type ProductsTableProps = {
 };
 
 const ProductsTable = ({ columns, initialData }: ProductsTableProps) => {
-  const [data, setData] = useState<Product[]>(initialData);
-  const { data: fetchedData } = api.product.read.useQuery();
-  useEffect(() => {
-    if (fetchedData) {
-      setData(fetchedData);
-    }
-  }, [fetchedData]);
+  const { data } = api.final.read.useQuery(undefined, { initialData });
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const setProductForm = useStore((state) => state.setProductForm);
+  const setFinalForm = useStore((state) => state.setFinalForm);
 
   const table = useReactTable({
     data,
@@ -83,12 +76,12 @@ const ProductsTable = ({ columns, initialData }: ProductsTableProps) => {
             width={50}
             height={50}
           />
-          <div className="font-bold text-3xl mt-2 ml-2">Items</div>
+          <div className="font-bold text-3xl mt-2 ml-2">Inventory</div>
         </div>
       </div>
-      {/* <ProductsTableToolbar table={table} /> */}
+      <ProductsTableToolbar table={table} />
       <DataTable table={table} columns={columns} />
-      <Button onClick={setProductForm} className="w-full">Add Product</Button>
+      <Button onClick={setFinalForm} className="w-full">Add Productt</Button>
       <DataTablePagination table={table} />
     </div>
   );

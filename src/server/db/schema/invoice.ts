@@ -19,7 +19,6 @@ export const invoice = pgTable("invoice", {
   customername: text("customername").notNull(),
   invoiceamount: doublePrecision("invoiceamount").notNull(),
   balancedue: doublePrecision("balancedue").notNull(),
-  paymentstatus: doublePrecision("paymentstatus").notNull(),
   status: paymentStatus("status").notNull(),
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
 });

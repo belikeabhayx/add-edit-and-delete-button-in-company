@@ -46,7 +46,7 @@ const ProductForm = ({ btn, formBtnTitle, values }: Props) => {
 
   const utils = api.useUtils();
 
-  const createOrUpdateProduct = api.product.createOrUpdate.useMutation({
+  const createOrUpdateProduct = api.final.createOrUpdate.useMutation({
     onSuccess: () => {
       setOpen(false);
       form.reset();
@@ -217,9 +217,9 @@ const ProductForm = ({ btn, formBtnTitle, values }: Props) => {
                   </FormItem>
                 )}
               />
-              {/* <Button onClick={setCustomerForm}>add zustand</Button> */}
+              <Button onClick={setCustomerForm}>add zustand</Button>
             </form>
-            {/* <Button onClick={setCustomerForm}>add customer</Button> */}
+            <Button onClick={setCustomerForm}>add customer</Button>
           </Form>
         </div>
         <SheetFooter>

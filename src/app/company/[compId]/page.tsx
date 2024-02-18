@@ -4,11 +4,8 @@ import { auth } from "@/server/auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
-import NoSSR from "@/components/no-ssr";
 import { api } from "@/trpc/server";
 import SideNavbar from "@/components/admin/dashboard/navbar/sidenav";
-import CustomerSelect from "@/components/admin/customerSelect/customerSelect";
-import Summary from "@/components/admin/summary/summary";
 import { columns } from "@/components/admin/invoice/columns";
 import ProductsTable from "@/components/admin/invoice/invoice-table";
 
@@ -23,8 +20,6 @@ const NotebookPage = async ({ params: { compId } }: Props) => {
   if (!session?.user) {
     return redirect("/dashboard");
   }
-  const products = await api.product.read.query();
-  const customer = await api.customer.read.query();
   const invoice = await api.invoice.read.query();
 
   return (

@@ -1,18 +1,19 @@
 import SideNavbar from "@/components/admin/dashboard/navbar/sidenav";
-import { columns } from "@/components/admin/products/columns";
-import ProductsTable from "@/components/admin/products/products-table";
 import Summary from "@/components/admin/summary/summary";
 import { Button } from "@/components/ui/button";
 import { products } from "@/server/db/schema";
 import { api } from "@/trpc/server";
 import Link from "next/link";
 import React from "react";
-import NoSSR from "@/components/no-ssr";;
+import NoSSR from "@/components/no-ssr";
+import ProductsTable from "@/components/admin/final/products-table";
+import { columns } from "@/components/admin/final/columns";
+;
 
 type Props = {};
 
 const page = async (props: Props) => {
-  const products = await api.product.read.query();
+  const products = await api.final.read.query();
 
   return (
     <div className="grainy min-h-screen p-8">

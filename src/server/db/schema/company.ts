@@ -22,6 +22,7 @@ export const company = pgTable("company", {
 export const companyRelations = relations(company, ({ one }) => ({
   user: one(users, { fields: [company.id], references: [users.id] }),
   products: one(products, { fields: [company.id], references: [products.id] }),
+  final: one(products, { fields: [company.id], references: [products.id] }),
 }));
 
 export const insertCompanySchema = createInsertSchema(company);
