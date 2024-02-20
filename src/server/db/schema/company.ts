@@ -3,6 +3,7 @@ import { pgTable, serial, text, timestamp, varchar } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { products } from "./products";
 import { users } from "./users";
+import { invoice } from "./invoice";
 
 export const company = pgTable("company", {
   id: serial("id").primaryKey(),
@@ -19,10 +20,11 @@ export const company = pgTable("company", {
   updatedAt: timestamp("updatedAt"),
 });
 
-export const companyRelations = relations(company, ({ one }) => ({
-  user: one(users, { fields: [company.id], references: [users.id] }),
-  products: one(products, { fields: [company.id], references: [products.id] }),
-  final: one(products, { fields: [company.id], references: [products.id] }),
+export const companyRelations = relations(company, ({ one,many }) => ({
+  products: many(products),
+  order: one(products, { fields: [company.id], references: [products.id] }),
+  users: one(users, { fields: [company.id], references: [users.id] }),
+  invoice: many(invoice),
 }));
 
 export const insertCompanySchema = createInsertSchema(company);

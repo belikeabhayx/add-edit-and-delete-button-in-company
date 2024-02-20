@@ -7,20 +7,20 @@ import React from "react";
 import { api } from "@/trpc/server";
 import SideNavbar from "@/components/admin/dashboard/navbar/sidenav";
 import { columns } from "@/components/admin/invoice/columns";
-import ProductsTable from "@/components/admin/invoice/invoice-table";
+import InvoiceTable from "@/components/admin/invoice/invoice-table";
 
-type Props = {
-  params: {
-    compId: string;
-  };
-};
 
-const NotebookPage = async ({ params: { compId } }: Props) => {
+const NotebookPage = async ({ params }: { params: { slug: string } }) => {
   const session = await auth();
   if (!session?.user) {
     return redirect("/dashboard");
   }
-  const invoice = await api.invoice.read.query();
+  
+  const slug = Number(params.slug);
+  console.log(typeof slug);
+  const invoice = await api.invoice.read.query({
+    companyId: slug,
+  });
 
   return (
     <div className="grainy min-h-screen p-8">
@@ -33,7 +33,7 @@ const NotebookPage = async ({ params: { compId } }: Props) => {
             </Button>
           </Link>
           <div className="w-3"></div>
-          <span className="font-semibold">{compId}</span>
+          <span className="font-semibold">{slug}</span>
           <span className="mx-1 inline-block">/</span>
           <span className="font-semibold text-stone-500"></span>
           <div className="ml-auto"></div>
@@ -45,7 +45,7 @@ const NotebookPage = async ({ params: { compId } }: Props) => {
         <ProductsTable columns={columns} initialData={products} />
         </NoSSR>
         <Summary/> */}
-        <ProductsTable columns={columns} initialData={invoice} />
+        <InvoiceTable slug={slug} columns={columns} initialData={invoice} />
         </div>
       </div>
     </div>

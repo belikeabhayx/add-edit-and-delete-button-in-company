@@ -18,7 +18,7 @@ export const companyRouter = createTRPCRouter({
   create: protectedProcedure
     .input(insertCompanySchema)
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.insert(company).values({
+      await ctx.db.insert(company).values({ 
         legalname: input.legalname,
         businessname: input.businessname,
         GSTIN: input.GSTIN,

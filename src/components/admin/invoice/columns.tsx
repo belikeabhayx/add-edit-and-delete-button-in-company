@@ -9,9 +9,9 @@ import { api } from "@/trpc/react";
 import { selectInvoiceSchema } from "@/server/db/schema";
 import { ColumnHeader } from "@/components/ui/data-table/data-table-column-header";
 
-export type Product = z.infer<typeof selectInvoiceSchema>;
+export type Invoice = z.infer<typeof selectInvoiceSchema>;
 
-export const columns: ColumnDef<Product>[] = [
+export const columns: ColumnDef<Invoice>[] = [
   // Invoice
   {
     accessorKey: "id",
@@ -19,7 +19,7 @@ export const columns: ColumnDef<Product>[] = [
     enableSorting: false,
     enableHiding: false,
     cell: ({ getValue }) => (
-      <p className="w-24 truncate">{getValue<Product["id"]>()}</p>
+      <p className="w-24 truncate">{getValue<Invoice["id"]>()}</p>
     ),
   },
   // Customer Name
@@ -28,7 +28,7 @@ export const columns: ColumnDef<Product>[] = [
     header: ({ column }) => (
       <ColumnHeader column={column} title="Customer Name" />
     ),
-    cell: ({ getValue }) => getValue<Product["customername"]>(),
+    cell: ({ getValue }) => getValue<Invoice["customername"]>(),
   },
   // Invoice Amount
   {
@@ -66,7 +66,7 @@ export const columns: ColumnDef<Product>[] = [
     accessorKey: "status",
     header: ({ column }) => <ColumnHeader column={column} title="Status" />,
     cell: ({ getValue }) => {
-      const status = getValue<Product["status"]>();
+      const status = getValue<Invoice["status"]>();
 
       switch (status) {
         case "Paid":
@@ -97,7 +97,7 @@ export const columns: ColumnDef<Product>[] = [
       const deleteProduct = api.product.delete.useMutation({
         onSuccess: () => {
           utils.product.invalidate();
-          toast.success("Product deleted!");
+          toast.success("Invoice deleted!");
         },
         onError: () => {
           toast.error("Something went wrong!");
@@ -110,7 +110,7 @@ export const columns: ColumnDef<Product>[] = [
       return (
         <div className="flex">
           {/* <ProductForm
-            formBtnTitle="Update Product"
+            formBtnTitle="Update Invoice"
             btn={
               <Button
                 variant="outline"
@@ -123,7 +123,7 @@ export const columns: ColumnDef<Product>[] = [
           />
           <Button
             variant="outline"
-            className="group h-7 rounded-l-none border-l-0 p-2"
+            className="group h-7 rounded-l-none bInvoice-l-0 p-2"
             disabled={deleteProduct.isLoading}
             onClick={() => handleClick(row.original.id)}
           >

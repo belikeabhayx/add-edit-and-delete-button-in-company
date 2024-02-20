@@ -27,7 +27,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import useStore from "@/hook/use-store";
-import { insertfinalSchema } from "@/server/db/schema";
+import { insertorderSchema } from "@/server/db/schema";
 import { api } from "@/trpc/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect } from "react";
@@ -38,20 +38,24 @@ import { z } from "zod";
 type Props = {
   btn: React.ReactNode;
   formBtnTitle: string;
-  values?: z.infer<typeof insertfinalSchema>;
+  values?: z.infer<typeof insertorderSchema>;
+  slug: number;
 };
 
-const AddFinalForm = ({ values }: Props) => {
-  const isFinalFormOpen = useStore((state) => state.isFinalFormOpen);
-  const setFinalForm = useStore((state) => state.setFinalForm);
+const AddOrderForm = ({ values, slug }: Props) => {
+  const isorderFormOpen = useStore((state) => state.isOrderFormOpen);
+  const setorderForm = useStore((state) => state.setOrderForm);
 
   const [open, setOpen] = React.useState(false);
-  const form = useForm<z.infer<typeof insertfinalSchema>>({
-    resolver: zodResolver(insertfinalSchema),
-    defaultValues: values,
+  const form = useForm<z.infer<typeof insertorderSchema>>({
+    resolver: zodResolver(insertorderSchema),
+    defaultValues: {
+      ...values,
+      companyId: Number(slug)
+    },
   });
 
-  const onSubmit = async (values: z.infer<typeof insertfinalSchema>) => {
+  const onSubmit = async (values: z.infer<typeof insertorderSchema>) => {
     await createOrUpdateProduct.mutateAsync(values);
   };
 
@@ -60,19 +64,12 @@ const AddFinalForm = ({ values }: Props) => {
   const fetchProductData = async (selectedUser: any) => {
     if (selectedUser) {
       // Set form values based on the fetched product data
-
       setValue("hsn", selectedUser.hsn);
-
       setValue("quantity", selectedUser.quantity);
-
       setValue("price", selectedUser.price);
-
       setValue("gst", selectedUser.gst);
-
       setValue("cgst", selectedUser.cgst);
-
       setValue("taxableamount", selectedUser.taxableamount);
-
       setValue("amount", selectedUser.amount);
     }
   };
@@ -85,17 +82,11 @@ const AddFinalForm = ({ values }: Props) => {
       if (selectedCustomer) {
         form.reset({
           hsn: selectedCustomer.hsn,
-
           quantity: selectedCustomer.quantity,
-
           price: selectedCustomer.price,
-
           gst: selectedCustomer.gst,
-
           cgst: selectedCustomer.cgst,
-
           taxableamount: selectedCustomer.taxableamount,
-
           amount: selectedCustomer.amount,
         });
       }
@@ -104,11 +95,11 @@ const AddFinalForm = ({ values }: Props) => {
 
   const utils = api.useUtils();
 
-  const createOrUpdateProduct = api.final.createOrUpdate.useMutation({
+  const createOrUpdateProduct = api.order.createOrUpdate.useMutation({
     onSuccess: () => {
       setOpen(false);
       form.reset();
-      utils.final.invalidate();
+      utils.order.invalidate();
       toast.success(values?.id ? "Product updated!" : "Product created!");
     },
     onError: () => {
@@ -142,10 +133,10 @@ const AddFinalForm = ({ values }: Props) => {
 
   return (
     <div className="mx-auto w-[500px] p-4">
-      <Dialog open={isFinalFormOpen} onOpenChange={setFinalForm}>
+      <Dialog open={isorderFormOpen} onOpenChange={setorderForm}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Final Form</DialogTitle>
+            <DialogTitle>order Form</DialogTitle>
             <DialogDescription>
               <div className="flex-1 overflow-auto">
                 <Form {...form}>
@@ -158,19 +149,19 @@ const AddFinalForm = ({ values }: Props) => {
                         <FormItem className="col-span-4">
                           <FormLabel className="font-semibold">Name</FormLabel>
                           <FormControl>
-                              <Select
-                                {...field}
-                                onValueChange={(value: any) => {
-                                  field.onChange(value);
-                                  if (customerData) {
-                                    fetchProductData(
-                                      customerData.find(
-                                        (c: any) => c.name === value,
-                                      ),
-                                    );
-                                  }
-                                }}
-                              >
+                            <Select
+                              {...field}
+                              onValueChange={(value: any) => {
+                                field.onChange(value);
+                                if (customerData) {
+                                  fetchProductData(
+                                    customerData.find(
+                                      (c: any) => c.name === value,
+                                    ),
+                                  );
+                                }
+                              }}
+                            >
                               <SelectTrigger>
                                 <SelectValue placeholder="Select a customer" />
                               </SelectTrigger>
@@ -322,7 +313,7 @@ const AddFinalForm = ({ values }: Props) => {
   );
 };
 
-export default AddFinalForm;
+export default AddOrderForm;
 
 // const { data: customerData } = api.customer.read.useQuery();
 

@@ -20,6 +20,7 @@ import Link from "next/link";
 
 type ToolbarProps<TData> = {
   table: Table<TData>;
+  slug: number;
 };
 
 const options = [
@@ -45,7 +46,7 @@ const options = [
   },
 ];
 
-const ProductsTableToolbar = <TData,>({ table }: ToolbarProps<TData>) => {
+const InvoiceTableToolbar = <TData,>({ slug, table }: ToolbarProps<TData>) => {
 
   const isFiltered = table.getState().columnFilters.length > 0;
   const setCustomerForm = useStore((state) => state.setCustomerForm);
@@ -119,4 +120,4 @@ const ProductsTableToolbar = <TData,>({ table }: ToolbarProps<TData>) => {
   );
 };
 
-export default ProductsTableToolbar;
+export default InvoiceTableToolbar;

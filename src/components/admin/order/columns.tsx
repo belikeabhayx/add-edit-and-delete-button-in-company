@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { api } from "@/trpc/react";
 import { selectProductSchema } from "@/server/db/schema";
 import { ColumnHeader } from "@/components/ui/data-table/data-table-column-header";
-import ProductForm from "./product-form";
+import ProductForm from "./order-form";
 
 
 export type Product = z.infer<typeof selectProductSchema>;

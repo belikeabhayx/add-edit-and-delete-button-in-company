@@ -39,9 +39,10 @@ type Props = {
   btn: React.ReactNode;
   formBtnTitle: string;
   values?: z.infer<typeof insertInvoiceSchema>;
+  slug: number,
 };
 
-const AddInvoiceForm = ({ values }: Props) => {
+const AddInvoiceForm = ({ values , slug }: Props) => {
   const isInvoiceFormOpen = useStore((state) => state.isInvoiceFormOpen);
   const setInvoiceForm = useStore((state) => state.setInvoiceForm);
 
@@ -52,6 +53,7 @@ const AddInvoiceForm = ({ values }: Props) => {
     resolver: zodResolver(insertInvoiceSchema),
     defaultValues: {
         ...values,
+        companyId: slug,
       },
   });
 
@@ -100,9 +102,9 @@ const AddInvoiceForm = ({ values }: Props) => {
                                 data.data.map((item) => (
                                   <SelectItem
                                     key={item.id}
-                                    value={item.legalname}
+                                    value={item.name}
                                   >
-                                    {item.legalname}
+                                    {item.name}
                                   </SelectItem>
                                 ))}
                             </SelectGroup>

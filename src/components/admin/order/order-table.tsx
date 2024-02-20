@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
 import { api } from "@/trpc/react";
-import ProductsTableToolbar from "./products-table-toolbar";
+import OrderTableToolbar from "./order-table-toolbar";
 import { Product } from "./columns";
 import {
   type ColumnDef,
@@ -26,14 +26,18 @@ import useStore from "@/hook/use-store";
 type ProductsTableProps = {
   columns: ColumnDef<Product>[];
   initialData: Product[];
+  slug: number;
 };
 
-const ProductsTable = ({ columns, initialData }: ProductsTableProps) => {
-  const { data } = api.final.read.useQuery(undefined, { initialData });
+const OrderTable = ({ columns, initialData ,slug }: ProductsTableProps) => {
+  const { data } = api.order.read.useQuery(
+    { companyId: slug },
+    { initialData },
+  );
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const setFinalForm = useStore((state) => state.setFinalForm);
+  const setOrderForm = useStore((state) => state.setOrderForm);
 
   const table = useReactTable({
     data,
@@ -79,12 +83,12 @@ const ProductsTable = ({ columns, initialData }: ProductsTableProps) => {
           <div className="font-bold text-3xl mt-2 ml-2">Inventory</div>
         </div>
       </div>
-      <ProductsTableToolbar table={table} />
+      <OrderTableToolbar table={table} />
       <DataTable table={table} columns={columns} />
-      <Button onClick={setFinalForm} className="w-full">Add Productt</Button>
+      <Button onClick={setOrderForm} className="w-full">Add Productt</Button>
       <DataTablePagination table={table} />
     </div>
   );
 };
 
-export default ProductsTable;
+export default OrderTable;

@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { FacetedFilter } from "@/components/ui/data-table/data-table-faceted-filter";
-import ProductForm from "./product-form";
+import ProductForm from "./order-form";
 import useStore from "@/hook/use-store";
 import Link from "next/link";
 
@@ -47,7 +47,7 @@ const options = [
   },
 ];
 
-const ProductsTableToolbar = <TData,>({ table }: ToolbarProps<TData>) => {
+const OrderTableToolbar = <TData,>({ table }: ToolbarProps<TData>) => {
 
   const setProductForm = useStore((state) => state.setProductForm);
   const isFiltered = table.getState().columnFilters.length > 0;
@@ -119,4 +119,4 @@ const ProductsTableToolbar = <TData,>({ table }: ToolbarProps<TData>) => {
   );
 };
 
-export default ProductsTableToolbar;
+export default OrderTableToolbar;

@@ -4,8 +4,7 @@ import { useState } from "react";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { api } from "@/trpc/react";
-import ProductsTableToolbar from "./invoice-table-toolbar";
-import { Product } from "./columns";
+import { Invoice } from "./columns";
 import {
   type ColumnDef,
   getCoreRowModel,
@@ -20,14 +19,19 @@ import {
   getFacetedRowModel,
 } from "@tanstack/react-table";
 import { TbFileInvoice } from "react-icons/tb";
+import InvoiceTableToolbar from "./invoice-table-toolbar";
 
-type ProductsTableProps = {
-  columns: ColumnDef<Product>[];
-  initialData: Product[];
+type InvoiceTableProps = {
+  slug: number;
+  columns: ColumnDef<Invoice>[];
+  initialData: Invoice[];
 };
 
-const ProductsTable = ({ columns, initialData }: ProductsTableProps) => {
-  const { data } = api.invoice.read.useQuery(undefined, { initialData });
+const InvoiceTable = ({ slug, columns, initialData }: InvoiceTableProps) => {
+  const { data } = api.invoice.read.useQuery(
+    { companyId: slug },
+    { initialData },
+  );
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -43,15 +47,6 @@ const ProductsTable = ({ columns, initialData }: ProductsTableProps) => {
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     getFacetedRowModel: getFacetedRowModel(),
-    //  TODO getFacetedUniqueValues bug
-    /*   When using getFacetedUniqueValues() there is a known bug in React Table where a warning message is logged in the console.
-         Warning: Can't perform a React state update on a component that hasn't mounted yet.
-         This issue is currently being tracked and can be viewed here:
-         https://github.com/TanStack/table/issues/5026
-         Until the issue is resolved, the warning message can be safely ignored.
-         Please note that the current bug affects only the warning message, not the functionality of the table itself.
-         React Table will continue to function as expected until the issue is resolved.
-    */
     getFacetedUniqueValues: getFacetedUniqueValues(),
 
     state: {
@@ -70,11 +65,11 @@ const ProductsTable = ({ columns, initialData }: ProductsTableProps) => {
           <div className="font-bold text-3xl mt-2 ml-2">Invoices</div>
         </div>
       </div>
-      <ProductsTableToolbar table={table} />
+      <InvoiceTableToolbar slug={slug} table={table} />
       <DataTable table={table} columns={columns} />
       <DataTablePagination table={table} />
     </div>
   );
 };
 
-export default ProductsTable;
+export default InvoiceTable;

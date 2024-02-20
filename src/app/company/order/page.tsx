@@ -6,14 +6,14 @@ import { api } from "@/trpc/server";
 import Link from "next/link";
 import React from "react";
 import NoSSR from "@/components/no-ssr";
-import ProductsTable from "@/components/admin/final/products-table";
-import { columns } from "@/components/admin/final/columns";
+import OrderTable from "@/components/admin/order/order-table";
+import { columns } from "@/components/admin/order/columns";
 ;
 
 type Props = {};
 
-const page = async (props: Props) => {
-  const products = await api.final.read.query();
+const Order = async (props: Props) => {
+const products = await api.order.read.query();
 
   return (
     <div className="grainy min-h-screen p-8">
@@ -35,7 +35,7 @@ const page = async (props: Props) => {
         <div className="h-4"></div>
         <div className="ml-10 w-full rounded-lg border border-stone-200 px-16 py-8 shadow-xl">
           <NoSSR>
-            <ProductsTable columns={columns} initialData={products} />
+            <OrderTable columns={columns} initialData={products} />
           </NoSSR>
           <Summary />
         </div>
@@ -44,4 +44,4 @@ const page = async (props: Props) => {
   );
 };
 
-export default page;
+export default Order;

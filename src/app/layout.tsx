@@ -7,8 +7,8 @@ import { TRPCReactProvider } from "@/trpc/react";
 import { Toaster } from "sonner";
 import AddCustomerForm from "@/components/admin/form/add-customer";
 import AddProductForm from "@/components/admin/form/add-product";
-import AddInvoice from "@/components/admin/form/add-invoice";
-import AddFinal from "@/components/admin/form/add-final";
+import AddOrderForm from "@/components/admin/form/add-order";
+import AddInvoiceForm from "@/components/admin/form/add-invoice";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -34,8 +34,8 @@ export default function RootLayout({
           {children}
           <AddCustomerForm />
           <AddProductForm />
-          <AddInvoice />
-          <AddFinal />
+          <AddInvoiceForm />
+          <AddOrderForm />
         </TRPCReactProvider>
       </body>
     </html>

@@ -5,11 +5,11 @@ type StoreState = {
 	isCustomerFormOpen: boolean;
 	isProductFormOpen: boolean;
 	isInvoiceFormOpen: boolean;
-	isFinalFormOpen: boolean;
+	isOrderFormOpen: boolean;
 	setCustomerForm: () => void;
 	setProductForm: () => void;
 	setInvoiceForm: () => void;
-	setFinalForm: () => void;
+	setOrderForm: () => void;
 };
 
 const useStore = create<StoreState>()(
@@ -17,11 +17,11 @@ const useStore = create<StoreState>()(
 		isCustomerFormOpen: false,
 		isProductFormOpen: false,
 		isInvoiceFormOpen: false,
-		isFinalFormOpen: false,
-		setFinalForm: () =>
+		isOrderFormOpen: false,
+		setOrderForm: () =>
 			set((state) => ({
 				...state,
-				isFinalFormOpen: !state.isFinalFormOpen,
+				isOrderFormOpen: !state.isOrderFormOpen,
 			})),
 		setInvoiceForm: () =>
 			set((state) => ({

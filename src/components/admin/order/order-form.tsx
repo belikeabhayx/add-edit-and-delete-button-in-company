@@ -21,7 +21,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { insertProductSchema } from "@/server/db/schema";
+import { insertProductSchema, insertorderSchema } from "@/server/db/schema";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
 import useStore from "@/hook/use-store";
@@ -29,24 +29,28 @@ import useStore from "@/hook/use-store";
 type Props = {
   btn: React.ReactNode;
   formBtnTitle: string;
-  values?: z.infer<typeof insertProductSchema>;
+  values?: z.infer<typeof insertorderSchema>;
+  slug: number;
 };
 
-const ProductForm = ({ btn, formBtnTitle, values }: Props) => {
+const ProductForm = ({ btn, formBtnTitle, values,slug }: Props) => {
   const setCustomerForm = useStore((state) => state.setCustomerForm);
   const [open, setOpen] = React.useState(false);
-  const form = useForm<z.infer<typeof insertProductSchema>>({
-    resolver: zodResolver(insertProductSchema),
+  const form = useForm<z.infer<typeof insertorderSchema>>({
+    resolver: zodResolver(insertorderSchema),
     defaultValues: values,
   });
-
-  const onSubmit = async (values: z.infer<typeof insertProductSchema>) => {
-    await createOrUpdateProduct.mutateAsync(values);
+  const onSubmit = async (values: z.infer<typeof insertorderSchema>) => {
+    const productValues = {
+      ...values,
+      companyId: slug,
+    };
+    await createOrUpdateProduct.mutateAsync(productValues);
   };
 
   const utils = api.useUtils();
 
-  const createOrUpdateProduct = api.final.createOrUpdate.useMutation({
+  const createOrUpdateProduct = api.order.createOrUpdate.useMutation({
     onSuccess: () => {
       setOpen(false);
       form.reset();
