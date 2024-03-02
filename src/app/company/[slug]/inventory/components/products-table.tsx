@@ -1,10 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
-
 import { api } from "@/trpc/react";
-import ProductsTableToolbar from "./products-table-toolbar";
 import { Product } from "./columns";
 import {
   type ColumnDef,
@@ -23,20 +21,20 @@ import { Button } from "@/components/ui/button";
 import useStore from "@/hook/use-store";
 import Image from "next/image";
 import { DataTable } from "@/components/ui/data-table/data-table";
+import AddProductForm from "@/components/admin/form/add-product";
+import ProductsTableToolbar from "./products-table-toolbar";
 
 type ProductsTableProps = {
   columns: ColumnDef<Product>[];
   initialData: Product[];
+  slug: number;
 };
 
-const ProductsTable = ({ columns, initialData }: ProductsTableProps) => {
-  const [data, setData] = useState<Product[]>(initialData);
-  const { data: fetchedData } = api.product.read.useQuery();
-  useEffect(() => {
-    if (fetchedData) {
-      setData(fetchedData);
-    }
-  }, [fetchedData]);
+const ProductsTable = ({ slug, columns, initialData }: ProductsTableProps) => {
+  const { data } = api.inventory.read.useQuery(
+    { companyId: slug },
+    { initialData },
+  );
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -86,9 +84,9 @@ const ProductsTable = ({ columns, initialData }: ProductsTableProps) => {
           <div className="font-bold text-3xl mt-2 ml-2">Items</div>
         </div>
       </div>
-      {/* <ProductsTableToolbar table={table} /> */}
+      <ProductsTableToolbar table={table} />
       <DataTable table={table} columns={columns} />
-      <Button onClick={setProductForm} className="w-full">Add Product</Button>
+      <AddProductForm slug={slug} btn={<Button>Add Product</Button>} formBtnTitle="add product"/>
       <DataTablePagination table={table} />
     </div>
   );

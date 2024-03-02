@@ -19,6 +19,7 @@ import Link from "next/link";
 
 type ToolbarProps<TData> = {
   table: Table<TData>;
+  slug: number,
 };
 
 const options = [
@@ -44,7 +45,7 @@ const options = [
   },
 ];
 
-const ProductsTableToolbar = <TData,>({ table }: ToolbarProps<TData>) => {
+const CustomersTableToolbar = <TData,>({ table, slug }: ToolbarProps<TData>) => {
 
   const isFiltered = table.getState().columnFilters.length > 0;
   
@@ -115,4 +116,4 @@ const ProductsTableToolbar = <TData,>({ table }: ToolbarProps<TData>) => {
   );
 };
 
-export default ProductsTableToolbar;
+export default CustomersTableToolbar;

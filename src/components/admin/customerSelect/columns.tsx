@@ -14,6 +14,7 @@ import useStore from "@/hook/use-store";
 export type Product = z.infer<typeof selectCustomerSchema>;
 
 
+
 export const columns: ColumnDef<Product>[] = [
   // id
   {
@@ -83,23 +84,17 @@ export const columns: ColumnDef<Product>[] = [
         deleteProduct.mutate({ id });
       };
 
-      const setCustomerForm = useStore((state) => state.setCustomerForm);
-      const isCustomerFormOpen = useStore((state) => state.isCustomerFormOpen);
-
       return (
         <div className="flex">
           <AddCustomerForm
             formBtnTitle="Update Product"
-            btn={
-              <Button
-                variant="outline"
-                className="group h-7 rounded-r-none p-2"
-              >
-                <Pencil className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-foreground" />
-              </Button>
-            }
-            values={row.original}
-          />
+            btn={<Button
+              variant="outline"
+              className="group h-7 rounded-r-none p-2"
+            >
+              <Pencil className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-foreground" />
+            </Button>}
+            values={row.original}/>
           <Button
             variant="outline"
             className="group h-7 rounded-l-none border-l-0 p-2"

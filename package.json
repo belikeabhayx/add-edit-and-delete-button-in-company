@@ -52,6 +52,7 @@
     "drizzle-orm": "^0.29.3",
     "drizzle-zod": "^0.5.1",
     "express": "^4.18.2",
+    "immer": "^10.0.3",
     "lucide-react": "^0.311.0",
     "next": "^14.1.0",
     "next-auth": "5.0.0-beta.4",
@@ -75,6 +76,7 @@
     "zustand": "^4.5.0"
   },
   "devDependencies": {
+    "@hookform/devtools": "^4.3.1",
     "@types/eslint": "^8.44.7",
     "@types/node": "^18.17.0",
     "@types/react": "^18.2.37",

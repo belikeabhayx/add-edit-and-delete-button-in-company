@@ -17,7 +17,7 @@ import { api } from "@/trpc/react";
 import Link from "next/link";
 import { Loader2, Pencil, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import CompanyForm from "@/components/admin/company/companyForm";
+import CompanyForm from "@/app/company/[slug]/customer/components/companyForm";
 
 const MainPage = () => {
   const [squares, setSquares] = useState<
@@ -108,16 +108,14 @@ const MainPage = () => {
           <div className="grid grid-cols-4">
             {data &&
               data.map((square, index) => (
-                <div className="ml-10 flex flex-row items-center justify-center rounded-lg border-2 border-dashed border-blue-950 p-4 transition hover:-translate-y-1 hover:shadow-xl sm:flex-col w-64 h-52 relative">
+                <div className="relative ml-10 flex h-52 w-64 flex-row items-center justify-center rounded-lg border-2 border-dashed border-blue-950 p-4 transition hover:-translate-y-1 hover:shadow-xl sm:flex-col">
                   <div className="p-4" key={index}>
                     <Link href={`/company/${square.id}`}>
                       <h3 className="text-xl font-semibold text-gray-900">
-                       Company Name: {square.businessname}
+                        Company Name: {square.businessname}
                       </h3>
                       <h2>Legal Name:{square.legalname}</h2>
-                      <h1>
-                        GSTIN:{square.GSTIN}
-                      </h1>
+                      <h1>GSTIN:{square.GSTIN}</h1>
                       <h1>PAN NO.{square.pan}</h1>
                     </Link>
                     <div className="h-1"></div>

@@ -32,10 +32,10 @@ export default function RootLayout({
         <TRPCReactProvider cookies={cookies().toString()}>
           <Toaster richColors position="bottom-center" />
           {children}
-          <AddCustomerForm />
-          <AddProductForm />
-          <AddInvoiceForm />
-          <AddOrderForm />
+          {/* <AddCustomerForm />
+          <AddProductForm /> */}
+          {/* <AddInvoiceForm /> */}
+          {/* <AddOrderForm /> */}
         </TRPCReactProvider>
       </body>
     </html>

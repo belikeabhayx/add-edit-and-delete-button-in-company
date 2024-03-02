@@ -7,6 +7,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   FormField,
@@ -42,7 +43,7 @@ type Props = {
   slug: number;
 };
 
-const AddOrderForm = ({ values, slug }: Props) => {
+const AddOrderForm = ({ btn, formBtnTitle ,values, slug}: Props) => {
   const isorderFormOpen = useStore((state) => state.isOrderFormOpen);
   const setorderForm = useStore((state) => state.setOrderForm);
 
@@ -51,7 +52,6 @@ const AddOrderForm = ({ values, slug }: Props) => {
     resolver: zodResolver(insertorderSchema),
     defaultValues: {
       ...values,
-      companyId: Number(slug)
     },
   });
 
@@ -59,8 +59,10 @@ const AddOrderForm = ({ values, slug }: Props) => {
     await createOrUpdateProduct.mutateAsync(values);
   };
 
-  const { data: customerData } = api.product.read.useQuery();
+  const { data: customerData } = api.inventory.read.useQuery({ companyId: slug });
   const { setValue } = form;
+  console.log(customerData);
+  console.log(slug);
   const fetchProductData = async (selectedUser: any) => {
     if (selectedUser) {
       // Set form values based on the fetched product data
@@ -134,6 +136,9 @@ const AddOrderForm = ({ values, slug }: Props) => {
   return (
     <div className="mx-auto w-[500px] p-4">
       <Dialog open={isorderFormOpen} onOpenChange={setorderForm}>
+      <DialogTrigger asChild>
+        <Button>{btn}</Button>
+      </DialogTrigger>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>order Form</DialogTitle>
@@ -163,11 +168,11 @@ const AddOrderForm = ({ values, slug }: Props) => {
                               }}
                             >
                               <SelectTrigger>
-                                <SelectValue placeholder="Select a customer" />
+                                <SelectValue placeholder="Select a product" />
                               </SelectTrigger>
                               <SelectContent>
                                 <SelectGroup>
-                                  <SelectLabel>Customers</SelectLabel>
+                                  <SelectLabel>Products</SelectLabel>
                                   {customerData?.map((customer) => (
                                     <SelectItem
                                       key={customer.id}
@@ -301,7 +306,7 @@ const AddOrderForm = ({ values, slug }: Props) => {
                     onClick={form.handleSubmit(onSubmit)}
                     disabled={form.formState.isSubmitting ? true : false}
                   >
-                    Add Product
+                    {formBtnTitle}
                   </Button>
                 </Form>
               </div>
@@ -314,24 +319,3 @@ const AddOrderForm = ({ values, slug }: Props) => {
 };
 
 export default AddOrderForm;
-
-// const { data: customerData } = api.customer.read.useQuery();
-
-// <Select {...field}>
-//                               <SelectTrigger>
-//                                 <SelectValue placeholder="Select a customer" />
-//                               </SelectTrigger>
-//                               <SelectContent>
-//                                 <SelectGroup>
-//                                   <SelectLabel>Customers</SelectLabel>
-//                                   {customerData?.map((customer) => (
-//                                     <SelectItem
-//                                       key={customer.id}
-//                                       value={customer.legalname}
-//                                     >
-//                                       {customer.legalname}
-//                                     </SelectItem>
-//                                   ))}
-//                                 </SelectGroup>
-//                               </SelectContent>
-//                             </Select>

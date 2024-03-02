@@ -1,6 +1,6 @@
 import { relations } from "drizzle-orm";
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { accounts, company, customer, invoice } from ".";
+import { accounts, company } from ".";
 
 export const users = pgTable("user", {
     id: text("id").notNull().primaryKey(),

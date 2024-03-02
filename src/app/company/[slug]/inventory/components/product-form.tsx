@@ -21,7 +21,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { insertProductSchema, insertorderSchema } from "@/server/db/schema";
+import { insertProductSchema } from "@/server/db/schema";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
 import useStore from "@/hook/use-store";
@@ -29,32 +29,28 @@ import useStore from "@/hook/use-store";
 type Props = {
   btn: React.ReactNode;
   formBtnTitle: string;
-  values?: z.infer<typeof insertorderSchema>;
-  slug: number;
+  values?: z.infer<typeof insertProductSchema>;
 };
 
-const ProductForm = ({ btn, formBtnTitle, values,slug }: Props) => {
+const ProductForm = ({ btn, formBtnTitle, values }: Props) => {
   const setCustomerForm = useStore((state) => state.setCustomerForm);
   const [open, setOpen] = React.useState(false);
-  const form = useForm<z.infer<typeof insertorderSchema>>({
-    resolver: zodResolver(insertorderSchema),
+  const form = useForm<z.infer<typeof insertProductSchema>>({
+    resolver: zodResolver(insertProductSchema),
     defaultValues: values,
   });
-  const onSubmit = async (values: z.infer<typeof insertorderSchema>) => {
-    const productValues = {
-      ...values,
-      companyId: slug,
-    };
-    await createOrUpdateProduct.mutateAsync(productValues);
+
+  const onSubmit = async (values: z.infer<typeof insertProductSchema>) => {
+    await createOrUpdateProduct.mutateAsync(values);
   };
 
   const utils = api.useUtils();
 
-  const createOrUpdateProduct = api.order.createOrUpdate.useMutation({
+  const createOrUpdateProduct = api.inventory.create.useMutation({
     onSuccess: () => {
       setOpen(false);
       form.reset();
-      utils.product.invalidate();
+      utils.inventory.invalidate();
       toast.success(values?.id ? "Product updated!" : "Product created!");
     },
     onError: () => {
@@ -221,9 +217,9 @@ const ProductForm = ({ btn, formBtnTitle, values,slug }: Props) => {
                   </FormItem>
                 )}
               />
-              <Button onClick={setCustomerForm}>add zustand</Button>
+              {/* <Button onClick={setCustomerForm}>add zustand</Button> */}
             </form>
-            <Button onClick={setCustomerForm}>add customer</Button>
+            {/* <Button onClick={setCustomerForm}>add customer</Button> */}
           </Form>
         </div>
         <SheetFooter>

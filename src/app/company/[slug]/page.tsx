@@ -17,14 +17,13 @@ const NotebookPage = async ({ params }: { params: { slug: string } }) => {
   }
   
   const slug = Number(params.slug);
-  console.log(typeof slug);
   const invoice = await api.invoice.read.query({
     companyId: slug,
   });
 
   return (
     <div className="grainy min-h-screen p-8">
-      <SideNavbar/>
+       <SideNavbar/>
       <div className="mx-auto max-w-7xl">
         <div className="flex items-center ml-10 rounded-lg border border-stone-200 p-4 shadow-xl">
           <Link href="/dashboard">
@@ -41,10 +40,6 @@ const NotebookPage = async ({ params }: { params: { slug: string } }) => {
 
         <div className="h-4"></div>
         <div className="w-full ml-10 rounded-lg border border-stone-200 px-16 py-8 shadow-xl">
-        {/* <NoSSR>
-        <ProductsTable columns={columns} initialData={products} />
-        </NoSSR>
-        <Summary/> */}
         <InvoiceTable slug={slug} columns={columns} initialData={invoice} />
         </div>
       </div>

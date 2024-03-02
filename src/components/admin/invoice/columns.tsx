@@ -94,9 +94,9 @@ export const columns: ColumnDef<Invoice>[] = [
     cell: ({ row }) => {
       const utils = api.useUtils();
 
-      const deleteProduct = api.product.delete.useMutation({
+      const deleteProduct = api.inventory.delete.useMutation({
         onSuccess: () => {
-          utils.product.invalidate();
+          utils.inventory.invalidate();
           toast.success("Invoice deleted!");
         },
         onError: () => {
@@ -104,7 +104,7 @@ export const columns: ColumnDef<Invoice>[] = [
         },
       });
 
-      const handleClick = (id: string) => {
+      const handleClick = (id: number) => {
         deleteProduct.mutate({ id });
       };
       return (

@@ -1,25 +1,16 @@
 import { relations, sql } from "drizzle-orm";
-import {
-  timestamp,
-  pgTable,
-  text,
-  primaryKey,
-  integer,
-  serial,
-  index,
-  varchar,
-  doublePrecision,
-  pgEnum,
-} from "drizzle-orm/pg-core";
+import { timestamp, pgTable, text, integer, serial } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { users } from "./users";
 import { z } from "zod";
+import { company } from "./company";
 
 export const customer = pgTable("customer", {
-  id: text("id")
-    .default(sql`gen_random_uuid()`)
+  id: serial("id")
     .notNull()
     .primaryKey(),
+  companyId: integer("company_id")
+    .references(() => company.id)
+    .notNull(),
   legalname: text("legalname").notNull(),
   businessname: text("businessname").notNull(),
   gstin: text("gstin").notNull(),
@@ -29,7 +20,7 @@ export const customer = pgTable("customer", {
 });
 
 export const customerRelations = relations(customer, ({ one }) => ({
-  user: one(users, { fields: [customer.id], references: [users.id] }),
+  company: one(company, {fields: [customer.companyId],references: [company.id],}),
 }));
 
 export const insertCustomerSchema = createInsertSchema(customer, {

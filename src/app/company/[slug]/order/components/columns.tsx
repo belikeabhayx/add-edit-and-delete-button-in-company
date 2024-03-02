@@ -6,11 +6,12 @@ import * as z from "zod";
 import React from "react";
 import { toast } from "sonner";
 import { api } from "@/trpc/react";
-import { selectProductSchema } from "@/server/db/schema";
+import { selectProductSchema, selectorderSchema } from "@/server/db/schema";
 import { ColumnHeader } from "@/components/ui/data-table/data-table-column-header";
-import ProductForm from "./product-form";
+import ProductForm from "./order-form";
 
-export type Product = z.infer<typeof selectProductSchema>;
+
+export type Product = z.infer<typeof selectorderSchema>;
 
 export const columns: ColumnDef<Product>[] = [
       // id
@@ -87,9 +88,9 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({ row }) => {
       const utils = api.useUtils();
 
-      const deleteProduct = api.product.delete.useMutation({
+      const deleteProduct = api.inventory.delete.useMutation({
         onSuccess: () => {
-          utils.product.invalidate();
+          utils.inventory.invalidate();
           toast.success("Product deleted!");
         },
         onError: () => {
@@ -97,28 +98,25 @@ export const columns: ColumnDef<Product>[] = [
         },
       });
 
-      const handleClick = (id: string) => {
+      const handleClick = (id: number) => {
         deleteProduct.mutate({ id });
       };
       return (
         <div className="flex">
           <ProductForm
             formBtnTitle="Update Product"
-            btn={
-              <Button
-                variant="outline"
-                className="group h-7 rounded-r-none p-2"
-              >
-                <Pencil className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-foreground" />
-              </Button>
-            }
-            values={row.original}
-          />
+            btn={<Button
+              variant="outline"
+              className="group h-7 rounded-r-none p-2"
+            >
+              <Pencil className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-foreground" />
+            </Button>}
+            values={row.original}/>
           <Button
             variant="outline"
             className="group h-7 rounded-l-none border-l-0 p-2"
             disabled={deleteProduct.isLoading}
-            onClick={() => handleClick(row.original.id)}
+            onClick={() => handleClick(Number(row.original.id))}
           >
             {deleteProduct.isLoading ? (
               <Loader2 className="h-4 w-4 animate-spin" />

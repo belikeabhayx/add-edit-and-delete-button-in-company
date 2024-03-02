@@ -9,6 +9,7 @@ import {
   selectCustomerSchema,
 } from "@/server/db/schema";
 import { desc, eq } from "drizzle-orm";
+import { z } from "zod";
 
 
 const id = selectCustomerSchema.pick({ id: true });
@@ -19,6 +20,7 @@ export const customerRouter = createTRPCRouter({
     .input(insertCustomerSchema)
     .mutation(async ({ ctx, input }) => {
       await ctx.db.insert(customer).values({
+        companyId : input.companyId,
         legalname: input.legalname,  
         businessname: input.businessname,
         gstin: input.gstin,
@@ -26,11 +28,14 @@ export const customerRouter = createTRPCRouter({
         email: input.email,
       });
     }),
-  read: protectedProcedure.query(async ({ ctx }) => {
-    return await ctx.db.query.customer.findMany({
-      orderBy: [desc(customer.createdAt)],
-    });
-  }),
+    read: protectedProcedure
+    .input(z.object({ companyId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.query.customer.findMany({
+        orderBy: [desc(customer.createdAt)],
+        where: eq(customer.companyId, (input.companyId)),
+      });
+    }),
   createOrUpdate: protectedProcedure
     .input(insertCustomerSchema)
     .mutation(async ({ ctx, input }) => {
@@ -40,11 +45,14 @@ export const customerRouter = createTRPCRouter({
         await ctx.db.insert(customer).values(input);
       }
     }),
-  // update: protectedProcedure
-  //   .input(insertCustomerSchema)
-  //   .mutation(async ({ ctx, input }) => {
-  //     await ctx.db.update(customer).set(input).where(eq(customer.id, input.id));
-  //   }),
+  update: protectedProcedure
+    .input(insertCustomerSchema)
+    .mutation(async ({ ctx, input }) => {
+      if (!input.id) {
+        throw new Error('ID is required for updating a customer');
+      }
+      await ctx.db.update(customer).set(input).where(eq(customer.id, input.id));
+    }),
   delete: protectedProcedure
     .input(id)
     .mutation(async ({ ctx, input }) => {

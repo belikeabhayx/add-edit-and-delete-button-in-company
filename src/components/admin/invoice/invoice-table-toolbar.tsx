@@ -1,7 +1,7 @@
 "use client";
 import { X, Settings2, PackagePlus } from "lucide-react";
 import { Table } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
+import { Button} from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -15,6 +15,7 @@ import {
 import { FacetedFilter } from "@/components/ui/data-table/data-table-faceted-filter";
 import useStore from "@/hook/use-store";
 import Link from "next/link";
+import AddInvoiceForm from "../form/add-invoice";
 
 
 
@@ -111,8 +112,7 @@ const InvoiceTableToolbar = <TData,>({ slug, table }: ToolbarProps<TData>) => {
           </Button>
         )}
       </div>
-      <Button onClick={setInvoiceForm}>Add Invoice</Button>
-      <Button onClick={setCustomerForm}>Add Customer</Button>
+      <AddInvoiceForm slug={slug} btn={<Button>Add invoice</Button>} formBtnTitle="add invoice"/>
       <Button>
         <Link href="/product">Product Page</Link>
       </Button>

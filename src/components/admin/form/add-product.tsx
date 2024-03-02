@@ -7,6 +7,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   FormField,
@@ -31,16 +32,21 @@ type Props = {
   btn: React.ReactNode;
   formBtnTitle: string;
   values?: z.infer<typeof insertProductSchema>;
+  slug: number,
 };
 
-const AddProductForm = ({ values }: Props) => {
+const AddProductForm = ({ btn, formBtnTitle, values, slug }: Props) => {
   const isProductFormOpen = useStore((state) => state.isProductFormOpen);
   const setProductForm = useStore((state) => state.setProductForm);
+
 
   const [open, setOpen] = React.useState(false);
   const form = useForm<z.infer<typeof insertProductSchema>>({
     resolver: zodResolver(insertProductSchema),
-    defaultValues: values,
+    defaultValues: {
+      ...values,
+      companyId: slug,
+    },
   });
 
   const onSubmit = async (values: z.infer<typeof insertProductSchema>) => {
@@ -49,11 +55,11 @@ const AddProductForm = ({ values }: Props) => {
 
   const utils = api.useUtils();
 
-  const createOrUpdateProduct = api.product.createOrUpdate.useMutation({
+  const createOrUpdateProduct = api.inventory.create.useMutation({
     onSuccess: () => {
       setOpen(false);
       form.reset();
-      utils.product.invalidate();
+      utils.inventory.invalidate();
       toast.success(values?.id ? "Product updated!" : "Product created!");
     },
     onError: () => {
@@ -88,6 +94,9 @@ const AddProductForm = ({ values }: Props) => {
   return (
     <div className="mx-auto w-[500px] p-4">
       <Dialog open={isProductFormOpen} onOpenChange={setProductForm}>
+      <DialogTrigger asChild>
+        <Button>{btn}</Button>
+      </DialogTrigger>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Product Form</DialogTitle>
@@ -229,7 +238,7 @@ const AddProductForm = ({ values }: Props) => {
                     onClick={form.handleSubmit(onSubmit)}
                     disabled={form.formState.isSubmitting ? true : false}
                   >
-                    Add Product
+                     {formBtnTitle}
                   </Button>
                 </Form>
               </div>

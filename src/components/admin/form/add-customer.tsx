@@ -7,6 +7,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -25,23 +26,32 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { DevTool } from "@hookform/devtools";
 
 type Props = {
+  slug: number;
   btn: React.ReactNode;
   formBtnTitle: string;
   values?: z.infer<typeof insertCustomerSchema>;
 };
 
-const AddCustomerForm = ({ btn, formBtnTitle, values }: Props) => {
+const AddCustomerForm = ({ btn, formBtnTitle, values, slug }: Props) => {
+
+  console.log("Slug value in customer-form:", slug);
   const [open, setOpen] = React.useState(false);
   const isCustomerFormOpen = useStore((state) => state.isCustomerFormOpen);
   const setCustomerForm = useStore((state) => state.setCustomerForm);
   const form = useForm<z.infer<typeof insertCustomerSchema>>({
     resolver: zodResolver(insertCustomerSchema),
-    defaultValues: values,
+    defaultValues: {
+      ...values,
+      companyId: slug,
+    },
   });
 
   const onSubmit = async (values: z.infer<typeof insertCustomerSchema>) => {
+    console.log("onSubmit called");
+    console.log("Submitted values:", values);
     await createOrUpdateProduct.mutateAsync(values);
   };
 
@@ -62,6 +72,9 @@ const AddCustomerForm = ({ btn, formBtnTitle, values }: Props) => {
 
   return (
     <Dialog open={isCustomerFormOpen} onOpenChange={setCustomerForm}>
+      <DialogTrigger asChild>
+        <Button>{btn}</Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Customer Form</DialogTitle>
@@ -147,13 +160,16 @@ const AddCustomerForm = ({ btn, formBtnTitle, values }: Props) => {
                       </FormItem>
                     )}
                   />
+
+                  {/* <DevTool control={form.control} /> */}
                 </form>
               </Form>
-              <Button className="ml-44 mt-4"
+              <Button
+                className="ml-44 mt-4"
                 onClick={form.handleSubmit(onSubmit)}
                 disabled={form.formState.isSubmitting ? true : false}
               >
-               Add Customer
+                 {formBtnTitle}
               </Button>
             </div>
           </DialogDescription>

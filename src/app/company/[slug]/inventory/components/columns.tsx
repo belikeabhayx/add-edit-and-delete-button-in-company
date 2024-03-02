@@ -8,8 +8,7 @@ import { toast } from "sonner";
 import { api } from "@/trpc/react";
 import { selectProductSchema } from "@/server/db/schema";
 import { ColumnHeader } from "@/components/ui/data-table/data-table-column-header";
-import ProductForm from "./order-form";
-
+import ProductForm from "./product-form";
 
 export type Product = z.infer<typeof selectProductSchema>;
 
@@ -88,9 +87,9 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({ row }) => {
       const utils = api.useUtils();
 
-      const deleteProduct = api.product.delete.useMutation({
+      const deleteProduct = api.inventory.delete.useMutation({
         onSuccess: () => {
-          utils.product.invalidate();
+          utils.inventory.invalidate();
           toast.success("Product deleted!");
         },
         onError: () => {
@@ -98,7 +97,7 @@ export const columns: ColumnDef<Product>[] = [
         },
       });
 
-      const handleClick = (id: string) => {
+      const handleClick = (id: number) => {
         deleteProduct.mutate({ id });
       };
       return (

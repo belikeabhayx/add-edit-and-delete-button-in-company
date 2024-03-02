@@ -6,8 +6,8 @@ import { api } from "@/trpc/server";
 import Link from "next/link";
 import React from "react";
 import NoSSR from "@/components/no-ssr";
-import OrderTable from "@/components/admin/order/order-table";
-import { columns } from "@/components/admin/order/columns";
+import OrderTable from "@/app/company/[slug]/order/components/order-table";
+import { columns } from "@/app/company/[slug]/order/components/columns";
 ;
 
 type Props = {};
@@ -37,7 +37,7 @@ const products = await api.order.read.query();
           <NoSSR>
             <OrderTable columns={columns} initialData={products} />
           </NoSSR>
-          <Summary />
+          {/* <Summary /> */}
         </div>
       </div>
     </div>

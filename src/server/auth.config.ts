@@ -26,7 +26,6 @@ const nextAuthConfig: NextAuthConfig = {
         const validatedFields = LoginSchema.safeParse(credentials);
 
         if (validatedFields.success) {
-          const { email, password } = validatedFields.data; // Extracting email and password from validated credentials
         }
 
         return null; // Return null if credentials are invalid or user not found

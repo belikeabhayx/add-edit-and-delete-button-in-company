@@ -4,7 +4,7 @@ import { useState } from "react";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { api } from "@/trpc/react";
-import ProductsTableToolbar from "./customer-table-toolbar";
+import CustomersTableToolbar from "./customer-table-toolbar";
 import { Product } from "./columns";
 import {
   type ColumnDef,
@@ -21,14 +21,20 @@ import {
 } from "@tanstack/react-table";
 import useStore from "@/hook/use-store";
 import { Button } from "@/components/ui/button";
+import AddCustomerForm from "../form/add-customer";
 
 type ProductsTableProps = {
+  slug: number;
   columns: ColumnDef<Product>[];
   initialData: Product[];
 };
 
-const ProductsTable = ({ columns, initialData }: ProductsTableProps) => {
-  const { data } = api.customer.read.useQuery(undefined, { initialData });
+const CustomersTable = ({ columns, initialData, slug }: ProductsTableProps) => {
+  console.log("Slug valuee:", slug);
+  const { data } = api.customer.read.useQuery(
+    { companyId: slug },
+    { initialData },
+  );
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -65,12 +71,12 @@ const ProductsTable = ({ columns, initialData }: ProductsTableProps) => {
 
   return (
     <div className="space-y-4">
-      <ProductsTableToolbar table={table} />
+      <CustomersTableToolbar slug={slug} table={table} />
       <DataTable table={table} columns={columns} />
-      <Button onClick={setCustomerForm} className="w-full">Add Customer</Button>
+      <AddCustomerForm slug={slug} btn={<Button>Add customer</Button>} formBtnTitle="add customer"/>
       <DataTablePagination table={table} />
     </div>
   );
 };
 
-export default ProductsTable;
+export default CustomersTable;

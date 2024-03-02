@@ -7,6 +7,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   FormField,
@@ -34,6 +35,7 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { DevTool } from "@hookform/devtools";
 
 type Props = {
   btn: React.ReactNode;
@@ -42,11 +44,11 @@ type Props = {
   slug: number,
 };
 
-const AddInvoiceForm = ({ values , slug }: Props) => {
+const AddInvoiceForm = ({ btn,formBtnTitle , values , slug }: Props) => {
   const isInvoiceFormOpen = useStore((state) => state.isInvoiceFormOpen);
   const setInvoiceForm = useStore((state) => state.setInvoiceForm);
 
-  const data = api.product.read.useQuery();
+  const data = api.customer.read.useQuery({ companyId: slug });
 
   const [open, setOpen] = React.useState(false);
   const form = useForm<z.infer<typeof insertInvoiceSchema>>({
@@ -63,11 +65,11 @@ const AddInvoiceForm = ({ values , slug }: Props) => {
 
   const utils = api.useUtils();
 
-  const createOrUpdateProduct = api.invoice.createOrUpdate.useMutation({
+  const createOrUpdateProduct = api.invoice.create.useMutation({
     onSuccess: () => {
       setOpen(false);
       form.reset();
-      utils.product.invalidate();
+      utils.invoice.invalidate();
       toast.success(values?.id ? "Invoice updated!" : "Invoice created!");
     },
     onError: () => {
@@ -79,6 +81,9 @@ const AddInvoiceForm = ({ values , slug }: Props) => {
   return (
     <div className="mx-auto w-[500px] p-4">
       <Dialog open={isInvoiceFormOpen} onOpenChange={setInvoiceForm}>
+      <DialogTrigger asChild>
+        <Button>{btn}</Button>
+      </DialogTrigger>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Invoice Form</DialogTitle>
@@ -102,9 +107,9 @@ const AddInvoiceForm = ({ values , slug }: Props) => {
                                 data.data.map((item) => (
                                   <SelectItem
                                     key={item.id}
-                                    value={item.name}
+                                    value={item.legalname}
                                   >
-                                    {item.name}
+                                    {item.legalname}
                                   </SelectItem>
                                 ))}
                             </SelectGroup>
@@ -121,7 +126,7 @@ const AddInvoiceForm = ({ values , slug }: Props) => {
                         <FormItem className="col-span-4">
                           <FormLabel>Invoice Amount</FormLabel>
                           <FormControl>
-                            <Input type="number" {...field} readOnly />
+                            <Input type="number" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -136,7 +141,7 @@ const AddInvoiceForm = ({ values , slug }: Props) => {
                         <FormItem className="col-span-4">
                           <FormLabel>Balance Due</FormLabel>
                           <FormControl>
-                            <Input type="number" {...field} readOnly />
+                            <Input type="number" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -168,13 +173,14 @@ const AddInvoiceForm = ({ values , slug }: Props) => {
                         </FormItem>
                       )}
                     />
+                    <DevTool control={form.control} />
                   </form>
                   <Button
                     className="ml-36 mt-6"
                     onClick={form.handleSubmit(onSubmit)}
                     disabled={form.formState.isSubmitting ? true : false}
                   >
-                    Add Product
+                    {formBtnTitle}
                   </Button>
                 </Form>
               </div>

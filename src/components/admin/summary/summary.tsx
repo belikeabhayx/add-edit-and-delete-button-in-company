@@ -13,7 +13,7 @@ import { api } from "@/trpc/server";
 import Image from "next/image";
 
 const Summary = async () => {
-  const product = await api.product.read.query();
+  const product = await api.inventory.read.query();
 
   //  fetch taxable amount
   const totalTaxableAmount = product.reduce(

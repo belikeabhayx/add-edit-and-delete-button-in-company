@@ -1,18 +1,18 @@
 import SideNavbar from "@/components/admin/dashboard/navbar/sidenav";
-import { columns } from "@/components/admin/products/columns";
-import ProductsTable from "@/components/admin/products/products-table";
-import Summary from "@/components/admin/summary/summary";
+import { columns } from "@/app/company/[slug]/inventory/components/columns";
+import ProductsTable from "@/app/company/[slug]/inventory/components/products-table";
 import { Button } from "@/components/ui/button";
-import { products } from "@/server/db/schema";
 import { api } from "@/trpc/server";
 import Link from "next/link";
 import React from "react";
-import NoSSR from "@/components/no-ssr";;
+import NoSSR from "@/components/no-ssr";
 
-type Props = {};
-
-const page = async (props: Props) => {
-  const products = await api.product.read.query();
+const inventory = async ({ params }: { params: { slug: string } }) => {
+  const slug = Number(params.slug);
+  console.log(slug,"dingdghfdhfgh" )
+  const items = await api.inventory.read.query({
+    companyId: slug,
+  });
 
   return (
     <div className="grainy min-h-screen p-8">
@@ -34,7 +34,7 @@ const page = async (props: Props) => {
         <div className="h-4"></div>
         <div className="ml-10 w-full rounded-lg border border-stone-200 px-16 py-8 shadow-xl">
           <NoSSR>
-            <ProductsTable columns={columns} initialData={products} />
+            <ProductsTable slug={slug} columns={columns} initialData={items} />
           </NoSSR>
         </div>
       </div>
@@ -42,23 +42,10 @@ const page = async (props: Props) => {
   );
 };
 
-export default page;
+export default inventory;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{/* <div className="grainy min-h-screen p-8">
+{
+  /* <div className="grainy min-h-screen p-8">
       <SideNavbar />
       <div className="mx-auto max-w-7xl">
         <div className="ml-10 flex items-center rounded-lg border border-stone-200 p-4 shadow-xl">
@@ -81,4 +68,5 @@ export default page;
           </NoSSR>
         </div>
       </div>
-    </div> */}
+    </div> */
+}
