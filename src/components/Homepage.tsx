@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import React, { useEffect } from "react";
-import LoginForm from "@/components/auth/login-form";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import { FaGithub } from "react-icons/fa";

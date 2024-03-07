@@ -3,7 +3,11 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { FaHome, FaInfoCircle, FaCogs, FaEnvelope } from "react-icons/fa";
 
-const SideNavbar: React.FC = () => {
+interface SideNavbarProps {
+  slug: number;
+}
+
+const SideNavbar: React.FC<SideNavbarProps> = ({ slug }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -22,7 +26,7 @@ const SideNavbar: React.FC = () => {
           <FaHome />
         )}
       </div>
-      <Link href="/customer">
+      <Link href={`/company/${slug}/customer`}>
         <div className="flex cursor-pointer items-center justify-center p-4 text-white hover:bg-gray-700">
           {isHovered ? (
             <>
@@ -34,22 +38,25 @@ const SideNavbar: React.FC = () => {
           )}
         </div>
       </Link>
-      <div className="flex cursor-pointer items-center justify-center p-4 text-white hover:bg-gray-700">
-        {isHovered ? (
-          <>
-            <FaCogs className="mr-2" />
-            Invoices
-          </>
-        ) : (
-          <FaCogs />
-        )}
-      </div>
-      <Link href="/product">
+
+      <Link href={`/company/${slug}/order`}>
+        <div className="flex cursor-pointer items-center justify-center p-4 text-white hover:bg-gray-700">
+          {isHovered ? (
+            <>
+              <FaCogs className="mr-2" />
+              Orders
+            </>
+          ) : (
+            <FaCogs />
+          )}
+        </div>
+      </Link>
+      <Link href={`/company/${slug}/inventory`}>
         <div className="flex cursor-pointer items-center justify-center p-4 text-white hover:bg-gray-700">
           {isHovered ? (
             <>
               <FaEnvelope className="mr-2" />
-              Products
+              Inventory
             </>
           ) : (
             <FaEnvelope />

@@ -51,15 +51,6 @@ const ProductsTable = ({ slug, columns, initialData }: ProductsTableProps) => {
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     getFacetedRowModel: getFacetedRowModel(),
-    //  TODO getFacetedUniqueValues bug
-    /*   When using getFacetedUniqueValues() there is a known bug in React Table where a warning message is logged in the console.
-         Warning: Can't perform a React state update on a component that hasn't mounted yet.
-         This issue is currently being tracked and can be viewed here:
-         https://github.com/TanStack/table/issues/5026
-         Until the issue is resolved, the warning message can be safely ignored.
-         Please note that the current bug affects only the warning message, not the functionality of the table itself.
-         React Table will continue to function as expected until the issue is resolved.
-    */
     getFacetedUniqueValues: getFacetedUniqueValues(),
 
     state: {
@@ -81,12 +72,12 @@ const ProductsTable = ({ slug, columns, initialData }: ProductsTableProps) => {
             width={50}
             height={50}
           />
-          <div className="font-bold text-3xl mt-2 ml-2">Items</div>
+          <div className="font-bold text-3xl mt-2 ml-2">Inventory</div>
         </div>
       </div>
-      <ProductsTableToolbar table={table} />
+      <ProductsTableToolbar table={table} slug={slug} />
       <DataTable table={table} columns={columns} />
-      <AddProductForm slug={slug} btn={<Button>Add Product</Button>} formBtnTitle="add product"/>
+      {/* <AddProductForm slug={slug} btn={<Button>Add Product</Button>} formBtnTitle="add product"/> */}
       <DataTablePagination table={table} />
     </div>
   );

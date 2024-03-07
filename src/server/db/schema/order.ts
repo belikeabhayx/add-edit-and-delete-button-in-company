@@ -15,6 +15,9 @@ id: text("id")
     .default(sql`gen_random_uuid()`)
     .notNull()
     .primaryKey(),
+  companyId: integer("company_id")
+    .references(() => company.id)
+    .notNull(),
   name: text("name").notNull(),
   hsn: doublePrecision("hsn").notNull(),
   quantity: integer("quantity").notNull(),

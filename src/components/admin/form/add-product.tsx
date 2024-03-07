@@ -92,7 +92,7 @@ const AddProductForm = ({ btn, formBtnTitle, values, slug }: Props) => {
   ]);
 
   return (
-    <div className="mx-auto w-[500px] p-4">
+    <div className="mx-auto p-4">
       <Dialog open={isProductFormOpen} onOpenChange={setProductForm}>
       <DialogTrigger asChild>
         <Button>{btn}</Button>

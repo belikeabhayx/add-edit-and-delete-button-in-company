@@ -80,7 +80,7 @@ export const columns: ColumnDef<Product>[] = [
         },
       });
 
-      const handleClick = (id: string) => {
+      const handleClick = (id: number) => {
         deleteProduct.mutate({ id });
       };
 
@@ -94,7 +94,7 @@ export const columns: ColumnDef<Product>[] = [
             >
               <Pencil className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-foreground" />
             </Button>}
-            values={row.original}/>
+            values={row.original} slug={1}/>
           <Button
             variant="outline"
             className="group h-7 rounded-l-none border-l-0 p-2"

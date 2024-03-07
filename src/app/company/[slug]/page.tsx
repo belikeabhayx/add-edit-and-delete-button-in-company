@@ -23,7 +23,7 @@ const NotebookPage = async ({ params }: { params: { slug: string } }) => {
 
   return (
     <div className="grainy min-h-screen p-8">
-       <SideNavbar/>
+       <SideNavbar slug={slug}/>
       <div className="mx-auto max-w-7xl">
         <div className="flex items-center ml-10 rounded-lg border border-stone-200 p-4 shadow-xl">
           <Link href="/dashboard">

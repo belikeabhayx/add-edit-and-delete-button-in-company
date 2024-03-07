@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
 import { api } from "@/trpc/react";
 import OrderTableToolbar from "./order-table-toolbar";
-import { Product } from "./columns";
+import { Order } from "./columns";
 import {
   type ColumnDef,
   getCoreRowModel,
@@ -25,13 +25,14 @@ import useStore from "@/hook/use-store";
 import AddOrderForm from "@/components/admin/form/add-order";
 
 type ProductsTableProps = {
-  columns: ColumnDef<Product>[];
-  initialData: Product[];
+  columns: ColumnDef<Order>[];
+  initialData: Order[];
+  slug: number,
 };
 
-const OrderTable = ({ columns, initialData}: ProductsTableProps) => {
-  const [data, setData] = useState<Product[]>(initialData);
-  const { data: fetchedData } = api.order.read.useQuery();
+const OrderTable = ({ columns ,slug ,initialData}: ProductsTableProps) => {
+  const [data, setData] = useState<Order[]>(initialData);
+  const { data: fetchedData } = api.order.read.useQuery({ companyId: slug });
   useEffect(() => {
     if (fetchedData) {
       setData(fetchedData);
@@ -40,7 +41,6 @@ const OrderTable = ({ columns, initialData}: ProductsTableProps) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const setOrderForm = useStore((state) => state.setOrderForm);
 
   const table = useReactTable({
     data,
@@ -83,12 +83,12 @@ const OrderTable = ({ columns, initialData}: ProductsTableProps) => {
             width={50}
             height={50}
           />
-          <div className="font-bold text-3xl mt-2 ml-2">Inventory</div>
+          <div className="font-bold text-3xl mt-2 ml-2">Orders</div>
         </div>
       </div>
       <OrderTableToolbar table={table} />
       <DataTable table={table} columns={columns} />
-      <AddOrderForm btn={<Button>Add orders</Button>} formBtnTitle="add orders" slug={1}/>
+      <AddOrderForm btn={<Button>Add orders</Button>} formBtnTitle="add orders" slug={slug}/>
       <DataTablePagination table={table} />
     </div>
   );

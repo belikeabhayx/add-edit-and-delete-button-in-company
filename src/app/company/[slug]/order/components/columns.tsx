@@ -11,9 +11,9 @@ import { ColumnHeader } from "@/components/ui/data-table/data-table-column-heade
 import ProductForm from "./order-form";
 
 
-export type Product = z.infer<typeof selectorderSchema>;
+export type Order = z.infer<typeof selectorderSchema>;
 
-export const columns: ColumnDef<Product>[] = [
+export const columns: ColumnDef<Order>[] = [
       // id
   {
     accessorKey: "id",
@@ -21,26 +21,26 @@ export const columns: ColumnDef<Product>[] = [
     enableSorting: false,
     enableHiding: false,
     cell: ({ getValue }) => (
-      <p className="w-24 truncate">{getValue<Product["id"]>()}</p>
+      <p className="w-24 truncate">{getValue<Order["id"]>()}</p>
     ),
   },
     // name
   {
     accessorKey: "name",
     header: ({ column }) => <ColumnHeader column={column} title="Name" />,
-    cell: ({ getValue }) => (getValue<Product["name"]>()),
+    cell: ({ getValue }) => (getValue<Order["name"]>()),
   },
    // HSN
    {
     accessorKey: "hsn",
     header: "HSN",
-    cell: ({ getValue }) => (getValue<Product["hsn"]>()),
+    cell: ({ getValue }) => (getValue<Order["hsn"]>()),
   },
   // Quantity
   {
     accessorKey: "quantity",
     header: "quantity",
-    cell: ({ getValue }) => (getValue<Product["quantity"]>()),
+    cell: ({ getValue }) => (getValue<Order["quantity"]>()),
   },
     // price
   {
@@ -61,25 +61,25 @@ export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "cgst",
     header: "CGST (%)",
-    cell: ({ getValue }) => (getValue<Product["cgst"]>()),
+    cell: ({ getValue }) => (getValue<Order["cgst"]>()),
   },
    // GST
    {
     accessorKey: "gst",
     header: "GST (%)",
-    cell: ({ getValue }) => (getValue<Product["gst"]>()),
+    cell: ({ getValue }) => (getValue<Order["gst"]>()),
   },
     // Taxable Amount
   {
     accessorKey: "taxableamount",
     header: "taxableAmount",
-    cell: ({ getValue }) => (getValue<Product["taxableamount"]>()),
+    cell: ({ getValue }) => (getValue<Order["taxableamount"]>()),
   },
    // Amount
    {
     accessorKey: "amount",
     header: "Amount",
-    cell: ({ getValue }) => (getValue<Product["amount"]>()),
+    cell: ({ getValue }) => (getValue<Order["amount"]>()),
   },
     // actions
   {

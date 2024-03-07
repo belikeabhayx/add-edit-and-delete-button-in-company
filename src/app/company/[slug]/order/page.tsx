@@ -8,16 +8,19 @@ import React from "react";
 import NoSSR from "@/components/no-ssr";
 import OrderTable from "@/app/company/[slug]/order/components/order-table";
 import { columns } from "@/app/company/[slug]/order/components/columns";
-;
 
-type Props = {};
 
-const Order = async (props: Props) => {
-const products = await api.order.read.query();
+const Order = async ({ params }: { params: { slug: string } })=> {
+
+const slug = Number(params.slug);
+  const order = await api.order.read.query({
+    companyId: slug,
+  });
+  console.log("Slug value:", slug);
 
   return (
     <div className="grainy min-h-screen p-8">
-      <SideNavbar />
+      <SideNavbar slug={slug} />
       <div className="mx-auto max-w-7xl">
         <div className="ml-10 flex items-center rounded-lg border border-stone-200 p-4 shadow-xl">
           <Link href="/dashboard">
@@ -35,7 +38,7 @@ const products = await api.order.read.query();
         <div className="h-4"></div>
         <div className="ml-10 w-full rounded-lg border border-stone-200 px-16 py-8 shadow-xl">
           <NoSSR>
-            <OrderTable columns={columns} initialData={products} />
+            <OrderTable columns={columns} initialData={order} slug={slug} />
           </NoSSR>
           {/* <Summary /> */}
         </div>

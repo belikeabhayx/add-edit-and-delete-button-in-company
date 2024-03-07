@@ -14,14 +14,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { FacetedFilter } from "@/components/ui/data-table/data-table-faceted-filter";
-import ProductForm from "./product-form";
 import useStore from "@/hook/use-store";
-import Link from "next/link";
+import AddProductForm from "@/components/admin/form/add-product";
 
 
 
 type ToolbarProps<TData> = {
   table: Table<TData>;
+  slug: number;
 };
 
 const options = [
@@ -47,7 +47,7 @@ const options = [
   },
 ];
 
-const ProductsTableToolbar = <TData,>({ table }: ToolbarProps<TData>) => {
+const ProductsTableToolbar = <TData,>({ table, slug }: ToolbarProps<TData>) => {
 
   const setProductForm = useStore((state) => state.setProductForm);
   const isFiltered = table.getState().columnFilters.length > 0;
@@ -111,9 +111,10 @@ const ProductsTableToolbar = <TData,>({ table }: ToolbarProps<TData>) => {
           </Button>
         )}
       </div>
-      <Button>
+      <AddProductForm slug={slug} btn={<Button>Add Product</Button>} formBtnTitle="add product"/>
+      {/* <Button>
         <Link href="/invoice" >Create Invoice</Link>
-      </Button>
+      </Button> */}
       {/* <Button onClick={setProductForm}>Add Product</Button> */}
     </div>
   );

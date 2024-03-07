@@ -4,7 +4,7 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { products } from "./inventory";
 import { users } from "./users";
 import { invoice } from "./invoice";
-import { customer } from ".";
+import { customer, order } from ".";
 
 export const company = pgTable("company", {
   id: serial("id").primaryKey(),
@@ -23,10 +23,11 @@ export const company = pgTable("company", {
 
 export const companyRelations = relations(company, ({ one,many }) => ({
   products: many(products),
-  order: one(products, { fields: [company.id], references: [products.id] }),
+  // order: one(products, { fields: [company.id], references: [products.id] }),
   users: one(users, { fields: [company.id], references: [users.id] }),
   invoice: many(invoice),
   customer: many(customer),
+  order: many(order),
 }));
 
 export const insertCompanySchema = createInsertSchema(company);

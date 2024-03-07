@@ -26,9 +26,12 @@ export const orderRouter = createTRPCRouter({
         await ctx.db.insert(order).values(input);
       }
     }),
-    read: protectedProcedure.query(async ({ ctx }) => {
+    read: protectedProcedure
+    .input(z.object({ companyId: z.number() }))
+    .query(async ({ ctx, input }) => {
       return await ctx.db.query.order.findMany({
         orderBy: [desc(order.createdAt)],
+        where: eq(order.companyId, (input.companyId)),
       });
     }),
   update: protectedProcedure
