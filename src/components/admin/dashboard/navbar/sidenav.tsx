@@ -20,18 +20,18 @@ const SideNavbar: React.FC<SideNavbarProps> = ({ slug }) => {
         {isHovered ? (
           <>
             <FaHome className="mr-2" />
-            Home
+            Sales
           </>
         ) : (
           <FaHome />
         )}
       </div>
-      <Link href={`/company/${slug}/customer`}>
+      <Link href={`/company/${slug}/purchases`}>
         <div className="flex cursor-pointer items-center justify-center p-4 text-white hover:bg-gray-700">
           {isHovered ? (
             <>
               <FaInfoCircle className="mr-2" />
-              Customer
+              Purchases
             </>
           ) : (
             <FaInfoCircle />
@@ -39,12 +39,12 @@ const SideNavbar: React.FC<SideNavbarProps> = ({ slug }) => {
         </div>
       </Link>
 
-      <Link href={`/company/${slug}/order`}>
+      <Link href={`/company/${slug}/customer`}>
         <div className="flex cursor-pointer items-center justify-center p-4 text-white hover:bg-gray-700">
           {isHovered ? (
             <>
               <FaCogs className="mr-2" />
-              Orders
+              Customer
             </>
           ) : (
             <FaCogs />

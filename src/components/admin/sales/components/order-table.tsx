@@ -1,11 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
-import { DataTable } from "@/components/ui/data-table/data-table";
 import { api } from "@/trpc/react";
-import CustomersTableToolbar from "./customer-table-toolbar";
-import { Product } from "./columns";
+import OrderTableToolbar from "./order-table-toolbar";
+import { Order } from "./columns";
 import {
   type ColumnDef,
   getCoreRowModel,
@@ -19,26 +18,29 @@ import {
   getFacetedUniqueValues,
   getFacetedRowModel,
 } from "@tanstack/react-table";
-import useStore from "@/hook/use-store";
 import { Button } from "@/components/ui/button";
-import AddCustomerForm from "../form/add-customer";
+import Image from "next/image";
+import { DataTable } from "@/components/ui/data-table/data-table";
+import useStore from "@/hook/use-store";
+import AddOrderForm from "@/components/admin/form/add-order";
 
 type ProductsTableProps = {
-  slug: number;
-  columns: ColumnDef<Product>[];
-  initialData: Product[];
+  columns: ColumnDef<Order>[];
+  initialData: Order[];
+  slug: number,
 };
 
-const CustomersTable = ({ columns, initialData, slug }: ProductsTableProps) => {
-  console.log("Slug valuee:", slug);
-  const { data } = api.customer.read.useQuery(
-    { companyId: slug },
-    { initialData },
-  );
+const OrderTable = ({ columns ,slug ,initialData}: ProductsTableProps) => {
+  const [data, setData] = useState<Order[]>(initialData);
+  const { data: fetchedData } = api.order.read.useQuery({ companyId: slug });
+  useEffect(() => {
+    if (fetchedData) {
+      setData(fetchedData);
+    }
+  }, [fetchedData]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const setCustomerForm = useStore((state) => state.setCustomerForm);
 
   const table = useReactTable({
     data,
@@ -70,12 +72,25 @@ const CustomersTable = ({ columns, initialData, slug }: ProductsTableProps) => {
   });
 
   return (
+
     <div className="space-y-4">
-      <CustomersTableToolbar slug={slug} table={table} />
+      <div className=" mt-10 items-center justify-center">
+        {/* icon and heading */}
+        <div className="flex  mb-4">
+          <Image
+            src="/items.svg"
+            alt=""
+            width={50}
+            height={50}
+          />
+          <div className="font-bold text-3xl mt-2 ml-2">Sales</div>
+        </div>
+      </div>
+      <OrderTableToolbar table={table} slug={slug} />
       <DataTable table={table} columns={columns} />
       <DataTablePagination table={table} />
     </div>
   );
 };
 
-export default CustomersTable;
+export default OrderTable;

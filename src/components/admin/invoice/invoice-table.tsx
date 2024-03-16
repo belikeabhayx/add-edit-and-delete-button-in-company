@@ -62,7 +62,7 @@ const InvoiceTable = ({ slug, columns, initialData }: InvoiceTableProps) => {
         {/* icon and heading */}
         <div className="flex  mb-4">
           <TbFileInvoice className="text-5xl" />
-          <div className="font-bold text-3xl mt-2 ml-2">Invoices</div>
+          <div className="font-bold text-3xl mt-2 ml-2">Sales</div>
         </div>
       </div>
       <InvoiceTableToolbar slug={slug} table={table} />

@@ -8,7 +8,7 @@ import { Toaster } from "sonner";
 import AddCustomerForm from "@/components/admin/form/add-customer";
 import AddProductForm from "@/components/admin/form/add-product";
 import AddOrderForm from "@/components/admin/form/add-order";
-import AddInvoiceForm from "@/components/admin/form/add-invoice";
+import AddInvoiceForm from "@/components/admin/form/add-sales";
 
 const inter = Inter({
   subsets: ["latin"],

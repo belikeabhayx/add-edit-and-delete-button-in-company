@@ -18,17 +18,8 @@ import {
   Form,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import useStore from "@/hook/use-store";
-import { insertorderSchema } from "@/server/db/schema";
+import { insertProductSchema, insertSalesproductsSchema } from "@/server/db/schema";
 import { api } from "@/trpc/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect } from "react";
@@ -36,72 +27,39 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
+
 type Props = {
   btn: React.ReactNode;
   formBtnTitle: string;
-  values?: z.infer<typeof insertorderSchema>;
-  slug: number;
+  values?: z.infer<typeof insertSalesproductsSchema>;
+  slug: number,
 };
 
-const AddOrderForm = ({ btn, formBtnTitle ,values, slug}: Props) => {
-  const isorderFormOpen = useStore((state) => state.isOrderFormOpen);
-  const setorderForm = useStore((state) => state.setOrderForm);
+const AddSalesproductsForm = ({ btn, formBtnTitle, values, slug }: Props) => {
+  const isSalesproductsFormOpen = useStore((state) => state.isSalesproductsFormOpen);
+  const setSalesproductsForm = useStore((state) => state.setSalesproductsForm);
+
 
   const [open, setOpen] = React.useState(false);
-  const form = useForm<z.infer<typeof insertorderSchema>>({
-    resolver: zodResolver(insertorderSchema),
+  const form = useForm<z.infer<typeof insertSalesproductsSchema>>({
+    resolver: zodResolver(insertSalesproductsSchema),
     defaultValues: {
       ...values,
+      companyId: slug,
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof insertorderSchema>) => {
+  const onSubmit = async (values: z.infer<typeof insertSalesproductsSchema>) => {
     await createOrUpdateProduct.mutateAsync(values);
   };
 
-  const { data: customerData } = api.inventory.read.useQuery({ companyId: slug });
-  const { setValue } = form;
-  console.log(customerData);
-  console.log(slug);
-  const fetchProductData = async (selectedUser: any) => {
-    if (selectedUser) {
-      // Set form values based on the fetched product data
-      setValue("hsn", selectedUser.hsn);
-      setValue("quantity", selectedUser.quantity);
-      setValue("price", selectedUser.price);
-      setValue("gst", selectedUser.gst);
-      setValue("cgst", selectedUser.cgst);
-      setValue("taxableamount", selectedUser.taxableamount);
-      setValue("amount", selectedUser.amount);
-    }
-  };
-  useEffect(() => {
-    if (customerData && form.control) {
-      const selectedCustomer = customerData.find(
-        (customer) => customer.name === form.watch("name"),
-      );
-
-      if (selectedCustomer) {
-        form.reset({
-          hsn: selectedCustomer.hsn,
-          quantity: selectedCustomer.quantity,
-          price: selectedCustomer.price,
-          gst: selectedCustomer.gst,
-          cgst: selectedCustomer.cgst,
-          taxableamount: selectedCustomer.taxableamount,
-          amount: selectedCustomer.amount,
-        });
-      }
-    }
-  }, [customerData, form]);
-
   const utils = api.useUtils();
 
-  const createOrUpdateProduct = api.order.createOrUpdate.useMutation({
+  const createOrUpdateProduct = api.salesproduct.create.useMutation({
     onSuccess: () => {
       setOpen(false);
       form.reset();
-      utils.order.invalidate();
+      utils.salesproduct.invalidate();
       toast.success(values?.id ? "Product updated!" : "Product created!");
     },
     onError: () => {
@@ -135,13 +93,13 @@ const AddOrderForm = ({ btn, formBtnTitle ,values, slug}: Props) => {
 
   return (
     <div className="mx-auto p-4">
-      <Dialog open={isorderFormOpen} onOpenChange={setorderForm}>
+      <Dialog open={isSalesproductsFormOpen} onOpenChange={setSalesproductsForm}>
       <DialogTrigger asChild>
         <Button>{btn}</Button>
       </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>order Form</DialogTitle>
+            <DialogTitle>Product Form</DialogTitle>
             <DialogDescription>
               <div className="flex-1 overflow-auto">
                 <Form {...form}>
@@ -154,36 +112,10 @@ const AddOrderForm = ({ btn, formBtnTitle ,values, slug}: Props) => {
                         <FormItem className="col-span-4">
                           <FormLabel className="font-semibold">Name</FormLabel>
                           <FormControl>
-                            <Select
+                            <Input
+                              className="focus:ring-primary-500 focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900"
                               {...field}
-                              onValueChange={(value: any) => {
-                                field.onChange(value);
-                                if (customerData) {
-                                  fetchProductData(
-                                    customerData.find(
-                                      (c: any) => c.name === value,
-                                    ),
-                                  );
-                                }
-                              }}
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select a product" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectGroup>
-                                  <SelectLabel>Products</SelectLabel>
-                                  {customerData?.map((customer) => (
-                                    <SelectItem
-                                      key={customer.id}
-                                      value={customer.name}
-                                    >
-                                      {customer.name}
-                                    </SelectItem>
-                                  ))}
-                                </SelectGroup>
-                              </SelectContent>
-                            </Select>
+                            />
                           </FormControl>
                           <FormMessage className="font-medium text-red-500" />
                         </FormItem>
@@ -306,7 +238,7 @@ const AddOrderForm = ({ btn, formBtnTitle ,values, slug}: Props) => {
                     onClick={form.handleSubmit(onSubmit)}
                     disabled={form.formState.isSubmitting ? true : false}
                   >
-                    {formBtnTitle}
+                     {formBtnTitle}
                   </Button>
                 </Form>
               </div>
@@ -318,4 +250,4 @@ const AddOrderForm = ({ btn, formBtnTitle ,values, slug}: Props) => {
   );
 };
 
-export default AddOrderForm;
+export default AddSalesproductsForm;

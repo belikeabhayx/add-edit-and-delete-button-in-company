@@ -6,8 +6,8 @@ import { redirect } from "next/navigation";
 import React from "react";
 import { api } from "@/trpc/server";
 import SideNavbar from "@/components/admin/dashboard/navbar/sidenav";
-import { columns } from "@/components/admin/invoice/columns";
 import InvoiceTable from "@/components/admin/invoice/invoice-table";
+import { columns } from "@/components/admin/invoice/columns";
 
 
 const NotebookPage = async ({ params }: { params: { slug: string } }) => {
@@ -20,6 +20,7 @@ const NotebookPage = async ({ params }: { params: { slug: string } }) => {
   const invoice = await api.invoice.read.query({
     companyId: slug,
   });
+
 
   return (
     <div className="grainy min-h-screen p-8">

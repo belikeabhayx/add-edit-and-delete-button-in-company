@@ -30,7 +30,7 @@ type ProductsTableProps = {
   slug: number,
 };
 
-const OrderTable = ({ columns ,slug ,initialData}: ProductsTableProps) => {
+const PurchaseTable = ({ columns ,slug ,initialData}: ProductsTableProps) => {
   const [data, setData] = useState<Order[]>(initialData);
   const { data: fetchedData } = api.order.read.useQuery({ companyId: slug });
   useEffect(() => {
@@ -83,15 +83,14 @@ const OrderTable = ({ columns ,slug ,initialData}: ProductsTableProps) => {
             width={50}
             height={50}
           />
-          <div className="font-bold text-3xl mt-2 ml-2">Orders</div>
+          <div className="font-bold text-3xl mt-2 ml-2">Purchases</div>
         </div>
       </div>
-      <OrderTableToolbar table={table} />
+      <OrderTableToolbar slug={slug}  table={table} />
       <DataTable table={table} columns={columns} />
-      <AddOrderForm btn={<Button>Add orders</Button>} formBtnTitle="add orders" slug={slug}/>
       <DataTablePagination table={table} />
     </div>
   );
 };
 
-export default OrderTable;
+export default PurchaseTable;

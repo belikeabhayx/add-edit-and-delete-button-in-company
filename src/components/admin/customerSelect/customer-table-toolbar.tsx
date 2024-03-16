@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { FacetedFilter } from "@/components/ui/data-table/data-table-faceted-filter";
 import Link from "next/link";
+import AddCustomerForm from "../form/add-customer";
 
 
 
@@ -108,10 +109,8 @@ const CustomersTableToolbar = <TData,>({ table, slug }: ToolbarProps<TData>) => 
           </Button>
         )}
       </div>
+      <AddCustomerForm slug={slug} btn={<Button>Add customer</Button>} formBtnTitle="add customer"/>
       {/* <Button onClick={setCustomerForm}>Add Customer</Button> */}
-      <Button>
-        <Link href="/invoice">Invoice Page</Link>
-      </Button>
     </div>
   );
 };

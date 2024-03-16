@@ -1,13 +1,11 @@
 import SideNavbar from "@/components/admin/dashboard/navbar/sidenav";
-import Summary from "@/components/admin/summary/summary";
 import { Button } from "@/components/ui/button";
-import { products } from "@/server/db/schema";
 import { api } from "@/trpc/server";
 import Link from "next/link";
 import React from "react";
 import NoSSR from "@/components/no-ssr";
-import OrderTable from "@/app/company/[slug]/order/components/order-table";
-import { columns } from "@/app/company/[slug]/order/components/columns";
+import { columns } from "@/app/company/[slug]/purchases/components/columns";
+import PurchaseTable from "@/app/company/[slug]/purchases/components/purchase-table";
 
 
 const Order = async ({ params }: { params: { slug: string } })=> {
@@ -38,9 +36,8 @@ const slug = Number(params.slug);
         <div className="h-4"></div>
         <div className="ml-10 w-full rounded-lg border border-stone-200 px-16 py-8 shadow-xl">
           <NoSSR>
-            <OrderTable columns={columns} initialData={order} slug={slug} />
+            <PurchaseTable columns={columns} initialData={order} slug={slug} />
           </NoSSR>
-          {/* <Summary /> */}
         </div>
       </div>
     </div>

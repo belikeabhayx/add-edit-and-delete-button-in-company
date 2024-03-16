@@ -1,7 +1,8 @@
 "use client";
+
 import { X, Settings2, PackagePlus } from "lucide-react";
 import { Table } from "@tanstack/react-table";
-import { Button} from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -13,9 +14,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { FacetedFilter } from "@/components/ui/data-table/data-table-faceted-filter";
+import ProductForm from "./order-form";
 import useStore from "@/hook/use-store";
 import Link from "next/link";
-import AddInvoiceForm from "../form/add-sales";
+import AddOrderForm from "../../form/add-order";
 
 
 
@@ -47,14 +49,15 @@ const options = [
   },
 ];
 
-const InvoiceTableToolbar = <TData,>({ slug, table }: ToolbarProps<TData>) => {
+const OrderTableToolbar = <TData,>({ table, slug }: ToolbarProps<TData>) => {
 
+  const setProductForm = useStore((state) => state.setProductForm);
   const isFiltered = table.getState().columnFilters.length > 0;
   
   return (
     <div className="flex items-center justify-between gap-2">
       <Input
-        placeholder="Search for a invoice..."
+        placeholder="Search for a product..."
         value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
         onChange={(event) =>
           table.getColumn("title")?.setFilterValue(event.target.value)
@@ -110,9 +113,9 @@ const InvoiceTableToolbar = <TData,>({ slug, table }: ToolbarProps<TData>) => {
           </Button>
         )}
       </div>
-      <AddInvoiceForm slug={slug} btn={<Button>Add invoice</Button>} formBtnTitle="save invoice"/>
+      <AddOrderForm btn={<Button>Add orders</Button>} formBtnTitle="add orders" slug={slug}/>
     </div>
   );
 };
 
-export default InvoiceTableToolbar;
+export default OrderTableToolbar;
