@@ -12,7 +12,7 @@ const page = async ({ params }: { params: { slug: string } })=> {
   const customer = await api.customer.read.query({
     companyId: slug,
   });
-  console.log("Slug value:", slug);
+  // console.log("Slug value:", slug);
 
   return (
     <div className="grainy min-h-screen p-8">

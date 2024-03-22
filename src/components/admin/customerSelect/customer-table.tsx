@@ -30,7 +30,7 @@ type ProductsTableProps = {
 };
 
 const CustomersTable = ({ columns, initialData, slug }: ProductsTableProps) => {
-  console.log("Slug valuee:", slug);
+  // console.log("Slug valuee:", slug);
   const { data } = api.customer.read.useQuery(
     { companyId: slug },
     { initialData },

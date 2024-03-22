@@ -14,7 +14,7 @@ const slug = Number(params.slug);
   const order = await api.order.read.query({
     companyId: slug,
   });
-  console.log("Slug value:", slug);
+  // console.log("Slug value:", slug);
 
   return (
     <div className="grainy min-h-screen p-8">

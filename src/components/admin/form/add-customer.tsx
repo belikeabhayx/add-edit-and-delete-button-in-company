@@ -37,7 +37,7 @@ type Props = {
 
 const AddCustomerForm = ({ btn, formBtnTitle, values, slug }: Props) => {
 
-  console.log("Slug value in customer-form:", slug);
+  // console.log("Slug value in customer-form:", slug);
   const [open, setOpen] = React.useState(false);
   const isCustomerFormOpen = useStore((state) => state.isCustomerFormOpen);
   const setCustomerForm = useStore((state) => state.setCustomerForm);

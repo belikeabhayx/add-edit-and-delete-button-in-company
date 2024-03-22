@@ -31,14 +31,17 @@ import useStore from "@/hook/use-store";
 import { insertSalesSchema } from "@/server/db/schema/salesedit";
 import { api } from "@/trpc/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import AddCustomerForm from "./add-customer";
 import SaleseditTable from "../salesedit/components/products-table";
-import { columns } from "../salesedit/components/columns";
+import { Product, columns } from "../salesedit/components/columns";
 import AddSalesproductsForm from "./add-salesproduct";
+import { insertSalesproductsSchema } from "@/server/db/schema/salesproducts";
+import AddProductForm from "./add-product";
+import { TableDemo } from "../salesedit/components/simpletable";
 
 type Props = {
   btn: React.ReactNode;
@@ -51,12 +54,6 @@ const AddInvoiceForm = ({ btn, formBtnTitle, values, slug }: Props) => {
   const isInvoiceFormOpen = useStore((state) => state.isInvoiceFormOpen);
   const setInvoiceForm = useStore((state) => state.setInvoiceForm);
 
-  const { data: customerData } = api.customer.read.useQuery({
-    companyId: slug,
-  });
-  const items = api.salesproduct.read.useQuery({ companyId: slug });
-
-  
   const [open, setOpen] = React.useState(false);
   const form = useForm<z.infer<typeof insertSalesSchema>>({
     resolver: zodResolver(insertSalesSchema),
@@ -70,9 +67,11 @@ const AddInvoiceForm = ({ btn, formBtnTitle, values, slug }: Props) => {
     await createOrUpdateProduct.mutateAsync(values);
   };
 
+  const { data: customerData } = api.customer.read.useQuery({
+    companyId: slug,
+  });
   // select customer feature
   const { setValue } = form;
-  console.log(customerData);
   const fetchProductData = async (selectedUser: any) => {
     if (selectedUser) {
       // Set form values based on the fetched product data
@@ -126,9 +125,15 @@ const AddInvoiceForm = ({ btn, formBtnTitle, values, slug }: Props) => {
                   btn={<Button>Add customer</Button>}
                   formBtnTitle="add customer"
                 />
+                <AddProductForm
+                  slug={slug}
+                  btn={<Button>Add Product</Button>}
+                  formBtnTitle="add Product"
+                />
                 <Form {...form}>
                   <form className="w-full">
                     {/*customer Name */}
+                    <div className="flex justify-center items-center gap-6">
                     <FormField
                       control={form.control}
                       name="legalname"
@@ -150,7 +155,7 @@ const AddInvoiceForm = ({ btn, formBtnTitle, values, slug }: Props) => {
                               }}
                             >
                               <SelectTrigger>
-                                <SelectValue placeholder="Select a product" />
+                                <SelectValue placeholder="Select a customer" />
                               </SelectTrigger>
                               <SelectContent>
                                 <SelectGroup>
@@ -201,11 +206,9 @@ const AddInvoiceForm = ({ btn, formBtnTitle, values, slug }: Props) => {
                         </FormItem>
                       )}
                     />
-
-                    <SaleseditTable slug={slug} columns={columns} initialData={items} />
-                   
+                    </div>
+                    <TableDemo/>
                   </form>
-                  <AddSalesproductsForm slug={slug} btn={<Button>Add Products</Button>} formBtnTitle="add products"/>
                   <Button
                     className="ml-36 mt-6"
                     onClick={form.handleSubmit(onSubmit)}

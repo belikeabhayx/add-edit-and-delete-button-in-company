@@ -1,5 +1,5 @@
 "use client";
-import { X, Settings2, PackagePlus } from "lucide-react";
+import { X, Settings2 } from "lucide-react";
 import { Table } from "@tanstack/react-table";
 import { Button} from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,8 +13,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { FacetedFilter } from "@/components/ui/data-table/data-table-faceted-filter";
-import useStore from "@/hook/use-store";
-import Link from "next/link";
 import AddInvoiceForm from "../form/add-sales";
 
 

@@ -9,7 +9,7 @@ import NoSSR from "@/components/no-ssr";
 
 const inventory = async ({ params }: { params: { slug: string } }) => {
   const slug = Number(params.slug);
-  console.log(slug,"dingdghfdhfgh" )
+  // console.log(slug,"dingdghfdhfgh" )
   const items = await api.inventory.read.query({
     companyId: slug,
   });

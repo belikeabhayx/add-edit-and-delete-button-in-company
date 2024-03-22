@@ -25,13 +25,12 @@ type ProductsTableProps = {
   columns: ColumnDef<Product>[];
   initialData: Product[];
   slug: number;
+  products?: Product[];
+
 };
 
-const SaleseditTable = ({ slug, columns, initialData }: ProductsTableProps) => {
-  const { data } = api.salesproduct.read.useQuery(
-    { companyId: slug },
-    { initialData },
-  );
+const SaleseditTable = ({ slug, columns, initialData , products }: ProductsTableProps) => {
+  const data = products || initialData;
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
