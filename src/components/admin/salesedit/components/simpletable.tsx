@@ -66,7 +66,6 @@ export function TableDemo() {
             setInvoices = {setInvoices}
           />
         </TableRow>
-        <Button className="mt-8">Add</Button>
       </TableFooter>
     </Table>
   );

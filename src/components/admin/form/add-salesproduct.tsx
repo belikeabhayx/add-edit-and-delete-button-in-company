@@ -9,15 +9,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-  Form,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -30,10 +23,7 @@ import {
 import useStore from "@/hook/use-store";
 import { insertSalesproductsSchema } from "@/server/db/schema";
 import { api } from "@/trpc/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import React, { Dispatch, SetStateAction, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { z } from "zod";
 
 type Props = {
@@ -57,104 +47,38 @@ type Props = {
   >;
 };
 
-const AddSalesproductsForm = ({
-  btn,
-  formBtnTitle,
-  values,
-  slug,
-  setInvoices,
-}: Props) => {
+type Product = {
+  name: string;
+  hsn: number;
+  quantity: number;
+  price: number;
+  gst: number;
+  cgst: number;
+  taxableamount: number;
+  amount: number;
+};
+
+const AddSalesproductsForm = ({ btn, slug }: Props) => {
   const isorderFormOpen = useStore((state) => state.isOrderFormOpen);
   const setorderForm = useStore((state) => state.setOrderForm);
 
-  const [open, setOpen] = React.useState(false);
-  const form = useForm<z.infer<typeof insertSalesproductsSchema>>({
-    resolver: zodResolver(insertSalesproductsSchema),
-    defaultValues: {
-      ...values,
-    },
-  });
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-  const onSubmit = async (
-    values: z.infer<typeof insertSalesproductsSchema>,
-  ) => {
-    setInvoices([values]);
-  };
-
-  const { data: productData } = api.inventory.read.useQuery({
+  // Fetch data using useQuery
+  const { data, isLoading, error } = api.inventory.read.useQuery({
     companyId: slug,
   });
-  const { setValue } = form;
-  const fetchProductData = async (selectedUser: any) => {
-    if (selectedUser) {
-      setInvoices([{ ...selectedUser, name: "zzzz" }])
-      // Set form values based on the fetched product data
-      setValue("hsn", selectedUser.hsn);
-      setValue("quantity", selectedUser.quantity);
-      setValue("price", selectedUser.price);
-      setValue("gst", selectedUser.gst);
-      setValue("cgst", selectedUser.cgst);
-      setValue("taxableamount", selectedUser.taxableamount);
-      setValue("amount", selectedUser.amount);
+
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = event.target.value;
+    const selectedOption = data?.find((item) => item.name === selectedValue);
+    if (selectedOption) {
+      setSelectedProduct(selectedOption);
     }
   };
-  useEffect(() => {
-    if (productData && form.control) {
-      const selectedCustomer = productData.find(
-        (customer) => customer.name === form.watch("name"),
-      );
 
-      if (selectedCustomer) {
-        form.reset({
-          hsn: selectedCustomer.hsn,
-          quantity: selectedCustomer.quantity,
-          price: selectedCustomer.price,
-          gst: selectedCustomer.gst,
-          cgst: selectedCustomer.cgst,
-          taxableamount: selectedCustomer.taxableamount,
-          amount: selectedCustomer.amount,
-        });
-      }
-    }
-  }, [productData, form]);
-
-  const utils = api.useUtils();
-
-  const createOrUpdateProduct = api.order.createOrUpdate.useMutation({
-    onSuccess: () => {
-      setOpen(false);
-      form.reset();
-      utils.order.invalidate();
-      toast.success(values?.id ? "Product updated!" : "Product created!");
-    },
-    onError: () => {
-      setOpen(false);
-      toast.error("Something went wrong!");
-    },
-  });
-
-  // logic for total price based on price and tax rate
-  useEffect(() => {
-    const price = form.watch("price");
-    const cgstRate = form.watch("cgst");
-    const gstRate = form.watch("gst");
-    const quantity = form.watch("quantity");
-
-    // Calculate the total amount including GST // math.round
-    const totalWithGST = Math.round(
-      price * (1 + cgstRate / 100) * (1 + gstRate / 100) * quantity,
-    );
-    form.setValue("amount", totalWithGST);
-
-    // Calculate the taxable amount
-    const taxableAmount = Math.round(totalWithGST - price * quantity);
-    form.setValue("taxableamount", taxableAmount);
-  }, [
-    form.watch("price"),
-    form.watch("cgst"),
-    form.watch("gst"),
-    form.watch("quantity"),
-  ]);
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <div className="mx-auto p-4">
@@ -164,174 +88,157 @@ const AddSalesproductsForm = ({
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>order Form</DialogTitle>
+            <DialogTitle className="mb-10 ml-44">Sales Form</DialogTitle>
             <DialogDescription>
-              <div className="flex-1 overflow-auto">
-                <Form {...form}>
-                  <form className="grid grid-cols-4 gap-4">
-                    {/* Name */}
-                    <FormField
-                      control={form.control}
-                      name="name"
-                      render={({ field }) => (
-                        <FormItem className="col-span-4">
-                          <FormLabel className="font-semibold">Name</FormLabel>
-                          <FormControl>
-                            <Select
-                              {...field}
-                              onValueChange={(value: any) => {
-                                field.onChange(value);
-                                if (productData) {
-                                  fetchProductData(
-                                    productData.find(
-                                      (c: any) => c.name === value,
-                                    ),
-                                  );
-                                }
-                              }}
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select a product" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectGroup>
-                                  <SelectLabel>Products</SelectLabel>
-                                  {productData?.map((customer) => (
-                                    <SelectItem
-                                      key={customer.id}
-                                      value={customer.name}
-                                    >
-                                      {customer.name}
-                                    </SelectItem>
-                                  ))}
-                                </SelectGroup>
-                              </SelectContent>
-                            </Select>
-                          </FormControl>
-                          <FormMessage className="font-medium text-red-500" />
-                        </FormItem>
-                      )}
-                    />
+              <div className="grid grid-cols-2 space-x-4 space-y-4 overflow-auto">
+                <div>
+                  <Label className="font-bold text-black">Products</Label>
+                  <select onChange={handleSelectChange}>
+                    <option value="">Select a product</option>
+                    {data?.map((item) => (
+                      <option key={item.name} value={item.name}>
+                        {item.name}
+                      </option>
+                    ))}
+                  </select>
 
-                    {/* HSN */}
-                    <FormField
-                      control={form.control}
-                      name="hsn"
-                      render={({ field }) => (
-                        <FormItem className="col-span-4">
-                          <FormLabel>HSN</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                  {selectedProduct && (
+                    <div>
+                      <p>Name: {selectedProduct.name}</p>
+                      <p>HSN: {selectedProduct.hsn}</p>
+                      <p>Quantity: {selectedProduct.quantity}</p>
+                      <p>Price: {selectedProduct.price}</p>
+                      <p>GST: {selectedProduct.gst}</p>
+                      <p>CGST: {selectedProduct.cgst}</p>
+                      <p>Taxable Amount: {selectedProduct.taxableamount}</p>
+                      <p>Amount: {selectedProduct.amount}</p>
+                    </div>
+                  )}
+                </div>
 
-                    {/* Quantity */}
-                    <FormField
-                      control={form.control}
-                      name="quantity"
-                      render={({ field }) => (
-                        <FormItem className="col-span-4">
-                          <FormLabel>Quantity</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                {/* HSN */}
 
-                    {/* price */}
-                    <FormField
-                      control={form.control}
-                      name="price"
-                      render={({ field }) => (
-                        <FormItem className="col-span-2">
-                          <FormLabel>Price</FormLabel>
-                          <FormControl>
-                            <Input type="number" {...field} min={0} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                <div>
+                  <Label className="font-semibold text-black">HSN</Label>
+                  <Input
+                    type="number"
+                    placeholder="Hsn"
+                    value={selectedProduct?.hsn || ""}
+                    onChange={(e) => {
+                      if (selectedProduct) {
+                        setSelectedProduct({
+                          ...selectedProduct,
+                          hsn: Number(e.target.value),
+                        });
+                      }
+                    }}
+                  />
+                </div>
 
-                    {/* CGST */}
-                    <FormField
-                      control={form.control}
-                      name="cgst"
-                      render={({ field }) => (
-                        <FormItem className="col-span-2">
-                          <FormLabel>CGST (%)</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="number"
-                              {...field}
-                              min={0}
-                              max={100}
-                              value={field.value ?? 0}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                {/* quantity */}
 
-                    {/* GST */}
-                    <FormField
-                      control={form.control}
-                      name="gst"
-                      render={({ field }) => (
-                        <FormItem className="col-span-2">
-                          <FormLabel>GST (%)</FormLabel>
-                          <FormControl>
-                            <Input type="number" {...field} min={0} max={100} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                <div>
+                  <Label className="font-semibold text-black">Quantity</Label>
+                  <Input
+                    type="number"
+                    placeholder="Quantity"
+                    value={selectedProduct?.quantity || ""}
+                    onChange={(e) => {
+                      if (selectedProduct) {
+                        setSelectedProduct({
+                          ...selectedProduct,
+                          quantity: Number(e.target.value),
+                        });
+                      }
+                    }}
+                  />
+                </div>
 
-                    {/* Taxable Amount */}
-                    <FormField
-                      control={form.control}
-                      name="taxableamount"
-                      render={({ field }) => (
-                        <FormItem className="col-span-2">
-                          <FormLabel>Taxable Amount</FormLabel>
-                          <FormControl>
-                            <Input type="number" {...field} readOnly />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                {/* Price */}
 
-                    {/* Amount */}
-                    <FormField
-                      control={form.control}
-                      name="amount"
-                      render={({ field }) => (
-                        <FormItem className="col-span-2">
-                          <FormLabel>Amount</FormLabel>
-                          <FormControl>
-                            <Input type="number" {...field} readOnly />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </form>
-                  <Button
-                    className="ml-36 mt-6"
-                   
-                    disabled={form.formState.isSubmitting}
-                  >
-                    {formBtnTitle}
-                  </Button>
-                </Form>
+                <div>
+                  <Label className="font-semibold text-black">Price</Label>
+                  <Input
+                    type="number"
+                    placeholder="Price"
+                    value={selectedProduct?.price || ""}
+                    onChange={(e) => {
+                      if (selectedProduct) {
+                        setSelectedProduct({
+                          ...selectedProduct,
+                          price: Number(e.target.value),
+                        });
+                      }
+                    }}
+                  />
+                </div>
+                <div>
+                  <Label className="font-semibold text-black">GSt</Label>
+                  <Input
+                    type="text"
+                    placeholder="Gst"
+                    value={selectedProduct?.gst || ""}
+                    onChange={(e) => {
+                      if (selectedProduct) {
+                        setSelectedProduct({
+                          ...selectedProduct,
+                          gst: Number(e.target.value),
+                        });
+                      }
+                    }}
+                  />
+                </div>
+                <div>
+                  <Label className="font-semibold text-black">CGST</Label>
+                  <Input
+                    type="text"
+                    placeholder="Cgst"
+                    value={selectedProduct?.cgst || ""}
+                    onChange={(e) => {
+                      if (selectedProduct) {
+                        setSelectedProduct({
+                          ...selectedProduct,
+                          cgst: Number(e.target.value),
+                        });
+                      }
+                    }}
+                  />
+                </div>
+                <div>
+                  <Label className="font-semibold text-black">
+                    Taxable Amount
+                  </Label>
+                  <Input
+                    type="text"
+                    placeholder="Taxable Amount"
+                    value={selectedProduct?.taxableamount || ""}
+                    onChange={(e) => {
+                      if (selectedProduct) {
+                        setSelectedProduct({
+                          ...selectedProduct,
+                          taxableamount: Number(e.target.value),
+                        });
+                      }
+                    }}
+                  />
+                </div>
+                <div>
+                  <Label className="font-semibold text-black">Amount</Label>
+                  <Input
+                    type="text"
+                    placeholder="Amount"
+                    value={selectedProduct?.amount || ""}
+                    onChange={(e) => {
+                      if (selectedProduct) {
+                        setSelectedProduct({
+                          ...selectedProduct,
+                          amount: Number(e.target.value),
+                        });
+                      }
+                    }}
+                  />
+                </div>
+                <Button className="ml-14"> ADD </Button>
               </div>
             </DialogDescription>
           </DialogHeader>

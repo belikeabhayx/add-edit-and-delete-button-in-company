@@ -62,7 +62,6 @@ const AddOrderForm = ({ btn, formBtnTitle ,values, slug}: Props) => {
   const { data: customerData } = api.inventory.read.useQuery({ companyId: slug });
   const { setValue } = form;
   console.log(customerData);
-  console.log(slug);
   const fetchProductData = async (selectedUser: any) => {
     if (selectedUser) {
       // Set form values based on the fetched product data
