@@ -31,23 +31,11 @@ type Props = {
   formBtnTitle: string;
   values?: z.infer<typeof insertSalesproductsSchema>;
   slug: number;
-  setInvoices: Dispatch<
-    SetStateAction<
-      {
-        name: string;
-        hsn: number;
-        quantity: number;
-        price: number;
-        gst: number;
-        cgst: number;
-        taxableamount: number;
-        amount: number;
-      }[]
-    >
-  >;
+  addInvoice: (invoice: Product) => void;
 };
 
-type Product = {
+export interface Product {
+  id: number;
   name: string;
   hsn: number;
   quantity: number;
@@ -56,9 +44,11 @@ type Product = {
   cgst: number;
   taxableamount: number;
   amount: number;
-};
+  createdAt: Date;
+  companyId: number;
+ }
 
-const AddSalesproductsForm = ({ btn, slug }: Props) => {
+const AddSalesproductsForm = ({ btn, slug, addInvoice }: Props) => {
   const isorderFormOpen = useStore((state) => state.isOrderFormOpen);
   const setorderForm = useStore((state) => state.setOrderForm);
 
@@ -80,6 +70,13 @@ const AddSalesproductsForm = ({ btn, slug }: Props) => {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault(); // Prevent default form submission
+    if (selectedProduct) {
+       addInvoice(selectedProduct); // Call the function passed as a prop
+    }
+   };
+
   return (
     <div className="mx-auto p-4">
       <Dialog open={isorderFormOpen} onOpenChange={setorderForm}>
@@ -91,6 +88,8 @@ const AddSalesproductsForm = ({ btn, slug }: Props) => {
             <DialogTitle className="mb-10 ml-44">Sales Form</DialogTitle>
             <DialogDescription>
               <div className="grid grid-cols-2 space-x-4 space-y-4 overflow-auto">
+
+                {/* Product */}
                 <div>
                   <Label className="font-bold text-black">Products</Label>
                   <select onChange={handleSelectChange}>
@@ -101,19 +100,6 @@ const AddSalesproductsForm = ({ btn, slug }: Props) => {
                       </option>
                     ))}
                   </select>
-
-                  {selectedProduct && (
-                    <div>
-                      <p>Name: {selectedProduct.name}</p>
-                      <p>HSN: {selectedProduct.hsn}</p>
-                      <p>Quantity: {selectedProduct.quantity}</p>
-                      <p>Price: {selectedProduct.price}</p>
-                      <p>GST: {selectedProduct.gst}</p>
-                      <p>CGST: {selectedProduct.cgst}</p>
-                      <p>Taxable Amount: {selectedProduct.taxableamount}</p>
-                      <p>Amount: {selectedProduct.amount}</p>
-                    </div>
-                  )}
                 </div>
 
                 {/* HSN */}
@@ -172,6 +158,8 @@ const AddSalesproductsForm = ({ btn, slug }: Props) => {
                     }}
                   />
                 </div>
+
+                {/* GST */}
                 <div>
                   <Label className="font-semibold text-black">GSt</Label>
                   <Input
@@ -188,6 +176,9 @@ const AddSalesproductsForm = ({ btn, slug }: Props) => {
                     }}
                   />
                 </div>
+
+                {/* CGST */}
+
                 <div>
                   <Label className="font-semibold text-black">CGST</Label>
                   <Input
@@ -204,6 +195,8 @@ const AddSalesproductsForm = ({ btn, slug }: Props) => {
                     }}
                   />
                 </div>
+
+                {/* Taxable Amount */}
                 <div>
                   <Label className="font-semibold text-black">
                     Taxable Amount
@@ -222,6 +215,8 @@ const AddSalesproductsForm = ({ btn, slug }: Props) => {
                     }}
                   />
                 </div>
+
+                {/* Amount */}
                 <div>
                   <Label className="font-semibold text-black">Amount</Label>
                   <Input
@@ -238,7 +233,10 @@ const AddSalesproductsForm = ({ btn, slug }: Props) => {
                     }}
                   />
                 </div>
-                <Button className="ml-14"> ADD </Button>
+
+                {/* Submit */}
+                
+                <Button className="ml-14" onClick={handleSubmit}> ADD </Button>
               </div>
             </DialogDescription>
           </DialogHeader>

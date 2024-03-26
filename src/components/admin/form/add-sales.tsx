@@ -31,15 +31,11 @@ import useStore from "@/hook/use-store";
 import { insertSalesSchema } from "@/server/db/schema/salesedit";
 import { api } from "@/trpc/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import AddCustomerForm from "./add-customer";
-import SaleseditTable from "../salesedit/components/products-table";
-import { Product, columns } from "../salesedit/components/columns";
-import AddSalesproductsForm from "./add-salesproduct";
-import { insertSalesproductsSchema } from "@/server/db/schema/salesproducts";
 import AddProductForm from "./add-product";
 import { TableDemo } from "../salesedit/components/simpletable";
 
@@ -94,6 +90,19 @@ const AddInvoiceForm = ({ btn, formBtnTitle, values, slug }: Props) => {
     }
   }, [customerData, form]);
 
+  const handleSelectChange = (value: any) => {
+    if (customerData) {
+      const selectedCustomer = customerData.find(
+        (customer) => customer.legalname === value,
+      );
+      if (selectedCustomer) {
+        // Set form values based on the fetched customer data
+        setValue("custaddress", selectedCustomer.businessname);
+        setValue("gstin", selectedCustomer.gstin);
+      }
+    }
+ };
+
   const utils = api.useUtils();
 
   const createOrUpdateProduct = api.salesproduct.create.useMutation({
@@ -133,81 +142,74 @@ const AddInvoiceForm = ({ btn, formBtnTitle, values, slug }: Props) => {
                 <Form {...form}>
                   <form className="w-full">
                     {/*customer Name */}
-                    <div className="flex justify-center items-center gap-6">
-                    <FormField
-                      control={form.control}
-                      name="legalname"
-                      render={({ field }) => (
-                        <FormItem className="col-span-4">
-                          <FormLabel className="font-semibold">Name</FormLabel>
-                          <FormControl>
-                            <Select
-                              {...field}
-                              onValueChange={(value: any) => {
-                                field.onChange(value);
-                                if (customerData) {
-                                  fetchProductData(
-                                    customerData.find(
-                                      (c: any) => c.name === value,
-                                    ),
-                                  );
-                                }
-                              }}
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select a customer" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectGroup>
-                                  <SelectLabel>Customers</SelectLabel>
-                                  {customerData?.map((customer) => (
-                                    <SelectItem
-                                      key={customer.id}
-                                      value={customer.legalname}
-                                    >
-                                      {customer.legalname}
-                                    </SelectItem>
-                                  ))}
-                                </SelectGroup>
-                              </SelectContent>
-                            </Select>
-                          </FormControl>
-                          <FormMessage className="font-medium text-red-500" />
-                        </FormItem>
-                      )}
-                    />
+                    <div className="flex items-center justify-center gap-6">
+                      <FormField
+                        control={form.control}
+                        name="legalname"
+                        render={({ field }) => (
+                          <FormItem className="col-span-4">
+                            <FormLabel className="font-semibold">
+                              Name
+                            </FormLabel>
+                            <FormControl>
+                              <Select
+                                {...field}
+                                onValueChange={handleSelectChange} // Add this line
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select a customer" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectGroup>
+                                    <SelectLabel>Customers</SelectLabel>
+                                    {customerData?.map((customer) => (
+                                      <SelectItem
+                                        key={customer.id}
+                                        value={customer.legalname}
+                                      >
+                                        {customer.legalname}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectGroup>
+                                </SelectContent>
+                              </Select>
+                            </FormControl>
+                            <FormMessage className="font-medium text-red-500" />
+                          </FormItem>
+                        )}
+                      />
 
-                    {/* Customer address */}
-                    <FormField
-                      control={form.control}
-                      name="custaddress"
-                      render={({ field }) => (
-                        <FormItem className="col-span-4">
-                          <FormLabel>Business Name</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                      {/* Customer address */}
+                      <FormField
+                        control={form.control}
+                        name="custaddress"
+                        render={({ field }) => (
+                          <FormItem className="col-span-4">
+                            <FormLabel>Business Name</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                    {/* GSTIN */}
-                    <FormField
-                      control={form.control}
-                      name="gstin"
-                      render={({ field }) => (
-                        <FormItem className="col-span-4">
-                          <FormLabel>GSTIN</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                      {/* GSTIN */}
+                      <FormField
+                        control={form.control}
+                        name="gstin"
+                        render={({ field }) => (
+                          <FormItem className="col-span-4">
+                            <FormLabel>GSTIN</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                     </div>
-                    <TableDemo/>
+                    <TableDemo />
                   </form>
                   <Button
                     className="ml-36 mt-6"

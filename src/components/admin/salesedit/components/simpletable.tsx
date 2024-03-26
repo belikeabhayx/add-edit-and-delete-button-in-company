@@ -12,7 +12,26 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import AddSalesproductsForm from "../../form/add-salesproduct";
 
+export interface Product {
+  id: number;
+  name: string;
+  hsn: number;
+  quantity: number;
+  price: number;
+  gst: number;
+  cgst: number;
+  taxableamount: number;
+  amount: number;
+  createdAt: Date;
+  companyId: number;
+ }
+
 export function TableDemo() {
+
+  const addInvoice = (newInvoice: Product) => {
+    setInvoices((prevInvoices) => [...prevInvoices, newInvoice]);
+   };
+
   const [invoices, setInvoices] = useState([
     {
       name: "egg",
@@ -63,7 +82,7 @@ export function TableDemo() {
             btn={"add"}
             formBtnTitle={"add"}
             slug={2}
-            setInvoices = {setInvoices}
+            addInvoice={addInvoice}
           />
         </TableRow>
       </TableFooter>
